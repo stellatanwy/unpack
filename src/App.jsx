@@ -5961,18 +5961,44 @@ export default function App() {
     const f = await sg("gm4_free"); if (typeof f === "number") setFreeCount(f);
     const sy = await sg("gm4_syllabus"); if (sy) setSyllabus(sy);
     const cs = await sg("gm4_completed_sessions"); if (cs) setCompletedSessions(cs);
-    if (u) {
-      setUser(u);
-      if (!u.onboardingComplete) {
+
+    // Fetch Supabase profile — authoritative for tier and onboarding state
+    const { data: sbProfile } = await supabase.from("profiles")
+      .select("tier, name, syllabus, year, school, topics_covered, exam_type, onboarding_complete")
+      .eq("id", supabaseUser.id).single();
+
+    // Merge: Supabase wins for tier; localStorage has session/records
+    const effectiveUser = u
+      ? { ...u, tier: sbProfile?.tier ?? u.tier, onboardingComplete: sbProfile?.onboarding_complete ?? u.onboardingComplete }
+      : sbProfile?.onboarding_complete
+        ? {
+            name: sbProfile.name || "Student",
+            email: supabaseUser.email || "",
+            tier: sbProfile.tier || "free-account",
+            syllabus: sbProfile.syllabus || "O-Elective",
+            year: sbProfile.year || ONBOARDING_DEFAULTS.year,
+            school: sbProfile.school || "",
+            topicsCovered: sbProfile.topics_covered || ONBOARDING_DEFAULTS.topicsCovered,
+            examType: sbProfile.exam_type || ONBOARDING_DEFAULTS.examType,
+            examDate: null, previousExamDate: null, sessionResetDay: 1, onboardingComplete: true,
+          }
+        : null;
+
+    if (effectiveUser) {
+      if (effectiveUser.tier !== u?.tier) await ss("gm4_user", effectiveUser); // sync tier to localStorage
+      setUser(effectiveUser);
+      if (!effectiveUser.onboardingComplete) {
         const draft = await sg("gm4_onboarding_draft");
         if (draft) { setOnboardingInitData(draft.data); setOnboardingInitStep(draft.step); }
         setShowOnboarding(true);
         return;
       }
+      const effectiveSyl = sbProfile?.syllabus || sy || "O-Elective";
+      setSyllabus(effectiveSyl);
       const existingSess = await sg("gm4_session");
       const currentWeek = getWeekStart();
       if (!existingSess || existingSess.weekStart !== currentWeek) {
-        const newSess = generateSession({ ...u, syllabus: sy || "O-Elective" }, r || [], QUESTION_BANK, existingSess, cs || []);
+        const newSess = generateSession({ ...effectiveUser, syllabus: effectiveSyl }, r || [], QUESTION_BANK, existingSess, cs || []);
         setSession(newSess);
         await ss("gm4_session", newSess);
       } else {
@@ -5980,7 +6006,7 @@ export default function App() {
       }
       setPage("app");
     } else {
-      // No local profile — check for onboarding draft first, otherwise start from step 2
+      // No profile anywhere — start onboarding
       const draft = await sg("gm4_onboarding_draft");
       if (draft) {
         setOnboardingInitData(draft.data);
@@ -6111,6 +6137,22 @@ export default function App() {
     await ss("gm4_user", userData);
     await ss("gm4_syllabus", sylId);
     await ss("gm4_onboarding_draft", null);
+    // Persist profile to Supabase so tier survives across devices
+    const { data: { session: authSess } } = await supabase.auth.getSession();
+    if (authSess?.user?.id) {
+      await supabase.from("profiles").upsert({
+        id: authSess.user.id,
+        tier: userData.tier,
+        name: userData.name,
+        syllabus: userData.syllabus,
+        year: userData.year,
+        school: userData.school,
+        topics_covered: userData.topicsCovered,
+        exam_type: userData.examType,
+        onboarding_complete: true,
+        updated_at: new Date().toISOString(),
+      });
+    }
     const newSess = generateSession({ ...userData, syllabus: sylId }, records, QUESTION_BANK, null, []);
     setSession(newSess);
     await ss("gm4_session", newSess);
