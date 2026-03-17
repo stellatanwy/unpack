@@ -227,9 +227,9 @@ const SYLLABUSES = {
 
 const SYLLABUS_LABELS = {
   "O-Elective": "O-Level Elective Geography (2260)",
-  "O-Pure":     "O-Level Pure Geography (2279)",
+  "O-Pure": "O-Level Pure Geography (2279)",
   "N-Elective": "N-Level Elective Geography (2125)",
-  "N-Pure":     "N-Level Pure Geography (2246)",
+  "N-Pure": "N-Level Pure Geography (2246)",
 };
 
 // ─── PAPER STRUCTURES ─────────────────────────────────────────────────────────
@@ -366,24 +366,24 @@ const PAPER_STRUCTURES = {
 // ─── ONBOARDING TOPICS ────────────────────────────────────────────────────────
 const ONBOARDING_TOPICS = {
   "Geography in Everyday Life": [
-    { id: "gel_thinking",   label: "Thinking Geographically" },
+    { id: "gel_thinking", label: "Thinking Geographically" },
     { id: "gel_sustainable", label: "Sustainable Development" },
-    { id: "gel_fieldwork",  label: "Geographical Methods & Fieldwork" },
+    { id: "gel_fieldwork", label: "Geographical Methods & Fieldwork" },
   ],
   "Tourism": [
-    { id: "tour_what",      label: "What is Tourism?" },
-    { id: "tour_impacts",   label: "Impacts of Tourism" },
+    { id: "tour_what", label: "What is Tourism?" },
+    { id: "tour_impacts", label: "Impacts of Tourism" },
     { id: "tour_sustainable", label: "Sustainable Tourism" },
   ],
   "Climate": [
-    { id: "clim_weather",   label: "Weather & Climate" },
-    { id: "clim_change",    label: "Climate Change" },
-    { id: "clim_action",    label: "Climate Action" },
+    { id: "clim_weather", label: "Weather & Climate" },
+    { id: "clim_change", label: "Climate Change" },
+    { id: "clim_action", label: "Climate Action" },
   ],
   "Tectonics": [
-    { id: "tect_plates",    label: "Plate Tectonics" },
-    { id: "tect_hazards",   label: "Earthquakes & Volcanoes" },
-    { id: "tect_drm",       label: "Disaster Risk Management" },
+    { id: "tect_plates", label: "Plate Tectonics" },
+    { id: "tect_hazards", label: "Earthquakes & Volcanoes" },
+    { id: "tect_drm", label: "Disaster Risk Management" },
   ],
 };
 
@@ -652,7 +652,7 @@ const QUESTION_BANK = [
       description: "Fig. 1.1 — Night photograph: large crowd at a temple in Ayodhya during Diwali. Foreground: hundreds of people placing oil lamps (diyas) arranged in glowing patterns on the ground. Background: illuminated temple with ornate domes and towers. Scene conveys religious devotion, communal ritual, cultural tradition, and shared identity tied to the place.",
       placeholder: "Fig. 1.1 — Photograph: Diwali celebrations at Ayodhya temple",
       caption: "Use specific visual elements — the temple as a landmark, the communal ritual of placing diyas, the large shared gathering — to explain how repeated participation in cultural/religious events at a specific location creates emotional attachment and a sense of belonging.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch1_p2_q1a_fig1.png"
     }
   },
@@ -830,7 +830,7 @@ const QUESTION_BANK = [
       description: "Fig. 2.1 — Dual-axis line graph 'Changes in tourist arrivals and tourism receipts of Costa Rica.' Left Y-axis: Tourist Arrivals (thousands) 0–3,500. Right Y-axis: Tourism Receipts (millions USD) 0–4,500. X-axis: 1995–2019. Tourist Arrivals: grew from ~700k in 1995 to ~3,100k in 2019 with a plateau 2008–2010, reaching highest-ever level in 2019 but rate of growth levelling off. Tourism Receipts: grew from ~700m to ~3,900m, broadly tracking arrivals. Fig. 2.2 — Spectrum diagram of ecotourism options. Hard ecotourism (left): Multi-day trek in Corcovado National Park — physically active, smaller groups, specialised, self-planned. Middle: Farming experience at Finca Luna Nueva Lodge. Soft ecotourism (right): Staying at Arenal Springs Resort & Spa — physically passive, larger groups, multi-purpose, planned by tour operators.",
       placeholder: "Fig. 2.1 — Dual-axis line graph (tourist arrivals and receipts 1995–2019); Fig. 2.2 — Hard-to-soft ecotourism spectrum",
       caption: "Use Fig. 2.1 to show high but slowing visitor growth (characteristic of consolidation) and high receipts. Use Fig. 2.2 to show diversification from hard to soft ecotourism indicating a maturing, well-established industry.",
-    
+
       srcs: ["https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch5_p1_q2ai_fig1.png", "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch5_p1_q2ai_fig2.png"]
     }
   },
@@ -844,7 +844,7 @@ const QUESTION_BANK = [
       description: "Fig. 2.2 — Ecotourism spectrum. Hard ecotourism: Multi-day trek in Corcovado National Park (physically active, smaller groups, specialised, self-planned). Middle: Farming experience at Finca Luna Nueva Lodge. Soft ecotourism: Staying at Arenal Springs Resort & Spa (physically passive and comfortable, larger groups, multi-purpose, planned by tour operators).",
       placeholder: "Fig. 2.2 — Hard-to-soft ecotourism spectrum",
       caption: "A Dependable tourist seeks organised, comfortable, safe travel with familiar amenities. Match this to the soft ecotourism end — Arenal Springs Resort & Spa — and explain why its characteristics suit a Dependable tourist.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch5_p1_q2aii_fig1.png"
     }
   },
@@ -879,7 +879,7 @@ const QUESTION_BANK = [
       description: "Fig. 3.1 — Map of Southeast Asia showing the monsoon wind system in January. Latitude: 30°S to 30°N. Red arrows show wind direction: originating over Asia (cold high-pressure zone, ~20–30°N) and blowing southward/southeastward across Southeast Asia (10°N to 0°), crossing the equator and turning toward northwest Australia (~10°S–20°S). Multiple arrows show the NE monsoon flowing from northeastern Asia through Indochina and the South China Sea toward Indonesia and northwestern Australia.",
       placeholder: "Fig. 3.1 — Map of monsoon wind system between Asia and Australia in January",
       caption: "Explain that in January, Asia is cold (winter high pressure) and Australia is experiencing summer (low pressure). Winds blow from Asia's high pressure southward to Australia. Note the wind deflects after crossing the equator (Coriolis effect) — NE monsoon in Southeast Asia becomes NW winds over Australia.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch5_p1_q3ai_fig1.png"
     }
   },
@@ -900,7 +900,7 @@ const QUESTION_BANK = [
       description: "Table 3.1 — Effect of shape of Earth's orbit on Earth's climate. More circular orbit: distance from Sun 147–152 million km, range 5 million km, highest average temp ~16°C, lowest average temp ~14°C. More oval (elliptical) orbit: distance 141–156 million km, range 15 million km, highest average temp ~17°C, lowest average temp ~11°C.",
       placeholder: "Table 3.1 — Orbital shape and climate data",
       caption: "A more circular orbit keeps Earth at a consistent distance — smaller temperature range (14–16°C). A more oval orbit brings Earth closer at perihelion (~141m km) and further at aphelion (~156m km) — creating a wider temperature range (11–17°C). This eccentricity variation is one of the Milankovitch cycles.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch5_p1_q3b_fig1.png"
     }
   },
@@ -914,7 +914,7 @@ const QUESTION_BANK = [
       description: "Fig. 3.2 — Scatter map of northwest Atlantic Ocean. X-axis: Longitude 80°W–60°W. Y-axis: Latitude 35°N–45°N. USA landmass on left. Two species: Bluefin tuna (green/teal dots) and Shortfin mako (brown/orange dots). Each species has Past (lighter shade) and Future (darker shade) clusters. Past positions: both species concentrated around 38–40°N, 68–72°W. Future positions: both shifted northward — bluefin tuna future cluster around 41–42°N; shortfin mako also shifted north/northeast. Arrow indicates direction of change (northward/poleward). Both species show approximately 1–3 degrees of latitude northward shift over 30 years.",
       placeholder: "Fig. 3.2 — Scatter map: past and future distribution of bluefin tuna and shortfin mako, northwest Atlantic",
       caption: "Both species have shifted northward (poleward) over 30 years. Link to ocean warming caused by climate change — cooler preferred water conditions are now found progressively further north. Use specific latitude data from the map.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch5_p1_q3c_fig1.png"
     }
   },
@@ -944,7 +944,7 @@ const QUESTION_BANK = [
       description: "Fig. 4.1 — Cross-section of a mid-ocean ridge (tectonic landform X). Labels: 'X' marks the ridge at top centre; 'NEWER CRUST' on both sides immediately adjacent to X; 'OLDER OCEANIC CRUST' further from the ridge; 'CONTINENTAL CRUST' at far edges; 'LITHOSPHERE' below the crust; 'MAGMA' rising at the ridge centre; 'ASTHENOSPHERE' (red) at the bottom with convection current arrows rising beneath the ridge and diverging laterally.",
       placeholder: "Fig. 4.1 — Cross-section of mid-ocean ridge (Tectonic Landform X)",
       caption: "Trace: magma rises from the asthenosphere at the ridge (X), cools and solidifies into new crust, moves away as fresh magma is added. Rock nearest the ridge is youngest; rock furthest away is oldest. Reference convection currents in the asthenosphere as the driving mechanism.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch5_p1_q4a_fig1.png"
     }
   },
@@ -965,7 +965,7 @@ const QUESTION_BANK = [
       description: "Fig. 4.2 — Photograph of Anak Krakatoa erupting in 2018, taken from sea level. Steep, symmetrical conical island rising from the sea. Slopes covered in grey ash and bare rock with no vegetation. Tall column of grey ash and white/grey smoke erupts vertically from the summit into a clear blue sky. Explosive ash-producing eruption rather than flowing lava.",
       placeholder: "Fig. 4.2 — Photograph: Anak Krakatoa erupting in 2018",
       caption: "Identify features of a stratovolcano: steep-sided cone, explosive ash column (indicating viscous, silica-rich magma), ash-covered grey slopes. Contrast with a shield volcano (broad, gentle slopes; fluid lava). Explain that explosive eruption indicates high-viscosity magma that traps gases until pressure forces a violent eruption.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch5_p1_q4c_fig1.png"
     }
   },
@@ -979,7 +979,7 @@ const QUESTION_BANK = [
       description: "Fig. 4.3 — Topographic sketch map of Anak Krakatoa. Key: contours at 50m intervals (100m and 200m contours visible); rock face; crater (solid black dot near summit); lava flow; forest; beach. North arrow present. Map not to scale. Features: beaches on coastal periphery; forested areas on lower slopes; bare rock face on steeper flanks; lava flow extending from near the crater toward the coast; single crater near summit. Closely spaced contours near summit indicate steep slopes; wider spacing on lower flanks.",
       placeholder: "Fig. 4.3 — Topographic sketch of Anak Krakatoa",
       caption: "Use contours to describe the steep conical shape (closely-spaced = steep slopes). Note the single crater near the summit. Identify features from past volcanic activity: lava flows, bare rock faces. Use the 100m and 200m contours to support description of height and slope angle.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch5_p1_q4d_fig1.png"
     }
   },
@@ -1109,7 +1109,7 @@ const QUESTION_BANK = [
       description: "Fig. 1.1 — Aerial/street map (OneMap) of a bounded neighbourhood in Toa Payoh, Singapore. Red outline demarcates the neighbourhood boundary. Within the boundary: HDB residential blocks (numbered 190s–240s, Toa Payoh Spring and Toa Payoh North estates); Masjid (mosque) and Singapore Islamic Hub/Madrasah cluster near Braddell Road; Beatty Secondary School; two 'Mkt & Hawker Ctr' labels on western and eastern edges; 'News Ctr' on north-west; bus-stop icons distributed around the boundary; Braddell Road along the north. Scale bar: 0–100m. Mix of residential, educational, religious, commercial, and civic facilities all within walking distance.",
       placeholder: "Fig. 1.1 — Map of Toa Payoh neighbourhood with boundary, HDB blocks, school, mosque, markets/hawker centres, news centre, bus stops",
       caption: "Identify the mix and distribution of services and commercial facilities within the neighbourhood boundary and consider how their presence supports economic activity and self-sufficiency for residents.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q1aii_fig1.png"
     }
   },
@@ -1151,7 +1151,7 @@ const QUESTION_BANK = [
       description: "Fig. 2.1 — Line graph 'Number of visitor arrivals in Taiwan 2009–2018.' Y-axis: Million people, 0–4.5. X-axis: 2009–2018. Four lines: China (blue) — starts ~1.0m (2009), rises steeply to peak ~4.0m (2015), then falls sharply to ~2.7m (2018). Southeast Asia (grey) — starts ~0.7m (2009), grows steadily to ~2.4m (2018), overtaking China in 2017–2018. Japan and South Korea (orange) — starts ~1.5m (2009), grows to ~3.0m (2018). Rest of world (gold) — starts ~1.5m (2009), grows to ~3.0m (2018).",
       placeholder: "Fig. 2.1 — Line graph of visitor arrivals to Taiwan 2009–2018: China peaks at ~4.0m in 2015 then falls; Southeast Asia grows steadily from ~0.7m to ~2.4m",
       caption: "Compare starting values, peak values, trends (increasing/decreasing/fluctuating), and relative positions of the China and Southeast Asia lines across the full 2009–2018 period.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q2a_fig1.png"
     }
   },
@@ -1165,7 +1165,7 @@ const QUESTION_BANK = [
       description: "Fig. 2.2 — Night photograph of Shilin Night Market, Taipei. Dense, narrow street packed with large numbers of people (tourists and locals). Both sides lined with brightly lit stalls and shops selling food and goods; Chinese-character signage and brand billboards (Sony Ericsson, Vodafone, ASUS, Motorola) visible. Foreground stalls display food items. Very large crowd filling the full width of the street. Scene suggests high footfall, vibrant commercial activity, and a culturally distinctive atmosphere.",
       placeholder: "Fig. 2.2 — Night photo: Shilin Night Market, Taipei — densely crowded narrow street, brightly lit food/retail stalls, large tourist/local crowd, Chinese-language and English brand signage",
       caption: "Use visible evidence — crowd density, commercial activity, types of businesses, signage — to infer both positive impacts (economic activity, cultural showcase) and negative impacts (overcrowding, noise, commercialisation) that high tourist volumes bring.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q2b_fig1.png"
     }
   },
@@ -1179,7 +1179,7 @@ const QUESTION_BANK = [
       description: "Fig. 2.3 — 4-day Greenland itinerary (source: blueiceexplorer.gl). Day 1: Arrive in remote Narsarsuaq settlement. Day 2: Boat to Itilleq; 4 km hike along 'King's Road' to Igaliku with fjord and mountain views. Day 3: Explore Norse ruins at Gardar; optional challenging hikes including 17 km route to Lake 90 for glacier/iceberg views, 15 km Waterfall Tour, and climb of Nuuluk peak (823 m); opportunities to find rock crystals and moonstone. Day 4: Visit Qassiarsuk (Erik the Red's 982 AD settlement), Brattahlid ruins and museum; glacier/iceberg boat trip to Qooroq Isfjord — enjoy a drink with ice over 1,000 years old in remote Arctic waters. Photos show glacier calving into a fjord and an Arctic stone cairn landscape.",
       placeholder: "Fig. 2.3 — 4-day Greenland itinerary: remote settlement, 4 km and 17 km hikes, 823 m peak, Norse ruins, glacier/iceberg boat trips",
       caption: "Consider what the activities (long challenging hikes, remote locations, historical/natural interest), remoteness, and cultural elements reveal about the fitness level, motivations, and tourist type this itinerary attracts.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q2c_fig1.png"
     }
   },
@@ -1200,7 +1200,7 @@ const QUESTION_BANK = [
       description: "Fig. 3.1 — Dual-axis line graph over 24 hours (12 Midnight to 12 Midnight). Left Y-axis: Relative Humidity (%), 40–80%. Right Y-axis: Air Temperature (°C), −4 to 16°C. Relative humidity (solid line): starts ~73% at midnight, decreases to trough ~46% at noon, rises to ~61% by midnight. Air temperature (dashed line): starts ~3°C at midnight, peaks ~11°C at noon, falls to ~6°C by midnight. Clear inverse relationship — as temperature rises through the morning, humidity falls; as temperature falls in the evening, humidity rises.",
       placeholder: "Fig. 3.1 — Dual-axis 24-hour graph: RH starts ~73%, falls to ~46% at noon, rises to ~61%; temperature starts ~3°C, peaks ~11°C at noon, falls to ~6°C",
       caption: "Describe the pattern of each variable across 24 hours and identify the inverse relationship. Note where the relationship is strongest and quote specific data values.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q3a_fig1.png"
     }
   },
@@ -1214,7 +1214,7 @@ const QUESTION_BANK = [
       description: "Fig. 3.2 — Coastal cross-section diagram at night (crescent moon symbol). Land on left (labelled 'land cooler'), sea on right (labelled 'sea warmer'). Blue arrow labelled 'cool land breeze' flows from land rightward toward the sea at surface level. Orange curved arrow labelled 'warm air' rises from the sea surface and arcs back over the land at altitude, completing the circulation cell. Trees, a house, and a valley on the land; a sailing boat on the sea.",
       placeholder: "Fig. 3.2 — Coastal cross-section at night: land cooler, sea warmer; blue arrow = cool land breeze flowing land→sea; orange curved arrow = warm air rising from sea and returning over land at altitude",
       caption: "Use all labels and arrows to explain the sequence: differential cooling of land vs sea at night → land becomes cooler and denser → high pressure over land, low pressure over sea → air flows from land to sea at surface as land breeze → warm air over sea rises and returns over land aloft completing the cell.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q3b_fig1.png"
     }
   },
@@ -1259,7 +1259,7 @@ const QUESTION_BANK = [
       description: "Fig. 4.1 — Ground-level photograph of the East African Rift Valley. Wide, flat-bottomed valley floor with a shallow stream/river. Valley flanked on both sides by near-vertical or very steep rock walls rising dramatically high; walls expose layered sedimentary/volcanic rock strata in shades of tan, orange, and brown. Small human figures on the valley floor give scale — the walls appear many tens of metres high. Valley has a narrow opening at the top relative to its depth, visible as a strip of sky between cliff faces.",
       placeholder: "Fig. 4.1 — Photo: East African Rift Valley — steep near-vertical rocky cliff walls (tan/orange/brown layered strata), flat sandy valley floor with shallow stream, human figures for scale",
       caption: "Use observable physical features — shape of valley floor, angle and height of walls, rock strata exposure — to describe what a rift valley looks like.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q4ai_fig1.png"
     }
   },
@@ -1273,7 +1273,7 @@ const QUESTION_BANK = [
       description: "Fig. 4.2 — Tectonic map of East Africa. Labels: African Plate (west/south), Arabian Plate (north-east) with black arrow pointing NE (diverging away from Africa). Gulf of Aden between Arabian Plate and Horn of Africa. Indian Ocean (south-east). Equator marked as dashed horizontal line. East African Rift shown as dotted lines running N–S through eastern Africa, bifurcating into: Western Rift Valley (Lakes Albert, Edward, Tanganyika) and Eastern Rift Valley (Lake Turkana and south). Volcano triangles along the rift including 'Erta Ale volcano' on the eastern branch. Lakes labelled: Albert, Victoria, Turkana, Edward, Tanganyika, Malawi. Legend: Plate Boundaries (solid red lines), East African Rift (dotted), Volcanoes (triangles). Black arrows show plates diverging.",
       placeholder: "Fig. 4.2 — Tectonic map of East Africa: African and Arabian plates with diverging arrows; East African Rift bifurcating into Western (Lakes Albert, Tanganyika, Malawi) and Eastern (Lake Turkana) branches; Erta Ale volcano marked; Gulf of Aden, Indian Ocean, Equator labelled",
       caption: "Use plate names, movement arrows, and rift location to explain the tectonic process: diverging plates → tension fractures continental crust → faulting and subsidence of central blocks → rift valley forms. Reference convection currents in the mantle as the driving force.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q4aii_fig1.png"
     }
   },
@@ -1287,7 +1287,7 @@ const QUESTION_BANK = [
       description: "Fig. 4.2 (tectonic map — as described above): Erta Ale labelled by a volcano triangle on the eastern branch of the East African Rift near the Horn of Africa/Gulf of Aden junction, at a divergent plate boundary. Fig. 4.3 — Aerial photograph of Erta Ale. Very broad, low, gently sloping shield volcano profile — wide and flat/dome-shaped rather than steep-sided. Summit area contains an active lava lake/caldera pit with a tall column of white volcanic gas/steam rising into blue sky. Surrounding landscape: arid, flat dark lava plain (solidified basaltic lava flows, dark grey/black) extending to the horizon. No significant vegetation. Crater rim clearly defined with active vent/lava lake pit visible as a deeper circular depression.",
       placeholder: "Fig. 4.3 — Aerial photo: Erta Ale — very broad, low-angle shield volcano; dark grey/black solidified basaltic lava flanks; summit caldera with active lava lake; tall white gas/steam column; flat, arid landscape",
       caption: "Link the physical appearance in Fig. 4.3 (broad shape, basaltic lava, active lava lake) to its tectonic setting in Fig. 4.2 (divergent boundary). Explain why divergent boundary volcanoes are shield-type: low-viscosity basaltic magma from mantle upwelling flows easily, building broad, gently sloping cones with effusive rather than explosive eruptions.",
-    
+
       srcs: ["https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q4aiii_fig1.png", "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q4aiii_fig2.png"]
     }
   },
@@ -1301,7 +1301,7 @@ const QUESTION_BANK = [
       description: "Fig. 4.4 — 2015 Nepal Earthquake damage map. Scale bar: 0–90 km. International boundaries with China (north) and India (south). Himalayan Mountains labelled to the north. Main epicentre: 7.8 magnitude, depth 15 km, 2015-04-25, near Gorkha/Nuwakot area NW of Kathmandu (marked with large double-ringed star). Multiple aftershock epicentres (magnitude 4–5, 5–6, and 6–7 scale) clustered nearby and eastward. Damage zones in colour: moderate (pale green), strong (yellow), very strong (orange), severe (dark orange/red), violent (darkest red). Violent/severe zones cover Kathmandu, Bhaktapur, Gorkha, Dhading, Sindhupalchok. Severe and very strong zones extend across much of central Nepal. Numerous named towns within the highest damage zones.",
       placeholder: "Fig. 4.4 — Nepal 2015 earthquake damage map: 7.8 magnitude epicentre (depth 15km) NW of Kathmandu; violent/severe damage zones covering Kathmandu and surrounding districts; multiple aftershocks (4–7 magnitude); Himalayan terrain to north; scale 0–90 km",
       caption: "Use specific evidence — epicentre location relative to Kathmandu, magnitude (7.8), shallow depth (15 km), extent and colour of damage zones, number of aftershocks, and proximity to Himalayan terrain — to explain why the earthquake caused severe damage and loss of life.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch3_p1_q4b_fig1.png"
     }
   },
@@ -1324,7 +1324,7 @@ const QUESTION_BANK = [
       description: "Fig. 1.4 — Survey results from 20 elderly residents near the Silver Zone. Three questions: (1) Awareness of Silver Zone — 20 yes, 0 no. (2) Safety rating — 4 neutral, 12 safe, 4 very safe. (3) Change in accidents since Silver Zone introduced — 10 noticed a decrease, 7 no significant change, 0 noticed an increase, 3 don't know.",
       placeholder: "Fig. 1.4 — Elderly Resident Survey: Silver Zone awareness, safety rating, and perceived change in accidents (n=20)",
       caption: "Use the survey data together with Table 1.1 speed data to argue whether Silver Zones are effective. Consider both evidence types and note any limitations in the data.",
-    
+
       src: "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch2_p1_q1cii_fig1.png"
     }
   },
@@ -1346,7 +1346,7 @@ const QUESTION_BANK = [
       description: "Fig. 2.1 — Line graph 'Monthly Tourist Arrivals to Taiwan, 2024.' X-axis: months Jan–Dec. Y-axis: number of arrivals (approximately 500,000–950,000). The line rises from Jan (589,961) to a peak in March (811,608), then drops sharply in April (610,146) following a 7.4 magnitude earthquake, continues declining through May (580,000), June (571,510), and July (539,454) — the lowest point of the year — before recovering from August onward, reaching its highest point in December (903,619). A second dip is visible in September (575,455) coinciding with a 5.3 magnitude earthquake.",
       placeholder: "Fig. 2.1 — Line graph: monthly tourist arrivals to Taiwan 2024 (peak March ~812k, trough July ~539k)",
       caption: "Describe the downward trend April–July, then use Table 2.1 to identify specific values and explain the causes — especially the April earthquake as a turning point.",
-    
+
       srcs: ["https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch2_p1_q2aii_fig1.png", "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch2_p1_q2aii_fig2.png"]
     }
   },
@@ -1433,7 +1433,7 @@ const QUESTION_BANK = [
       description: "Fig. 2.1 — Bar chart 'Number of Survey Respondents Likely to Revisit Tourist Destinations, by Monthly Income Group.' X-axis: income brackets (under $2,000 / $2,000–$3,999 / $4,000–$5,999 / $6,000–$7,999 / $8,000–$9,999 / over $10,000). Y-axis: number of respondents (0–60). Bar heights: 5, 20, 28, 15, 40, 55. General upward trend with higher income groups showing greater likelihood of revisiting, with a dip at $6,000–$7,999 (15) before rising steeply for the two highest brackets.",
       placeholder: "Fig. 2.1 — Bar chart: respondents likely to revisit by income group (under $2k=5, $2k–$4k=20, $4k–$6k=28, $6k–$8k=15, $8k–$10k=40, over $10k=55)",
       caption: "Describe the overall trend (higher income → more likely to revisit), note the anomaly at $6,000–$7,999, and use specific values from both Fig. 2.1 and Table 2.1 to support your description.",
-    
+
       srcs: ["https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch4_p1_q2aii_fig1.png", "https://judwlaenxahzwwvpozdw.supabase.co/storage/v1/object/public/question-figures/prelim_sch4_p1_q2aii_fig2.png"]
     }
   },
@@ -2198,8 +2198,8 @@ const generateSession = (user, records, allQuestions, currentSession, completedS
   const coveredClusters = (!tc || tc === "all" || (Array.isArray(tc) && tc.length === 0))
     ? null // null = no filter, show all
     : Object.entries(ONBOARDING_TOPICS)
-        .filter(([, topics]) => topics.some(t => tc.includes(t.id)))
-        .map(([cluster]) => cluster);
+      .filter(([, topics]) => topics.some(t => tc.includes(t.id)))
+      .map(([cluster]) => cluster);
 
   // Filter a list of question IDs to only those in covered clusters (if restricted)
   const filterByCovered = (qIds) => {
@@ -3042,8 +3042,8 @@ const Dashboard = ({ records, currentSession, user, completedSessions = [] }) =>
     }}>
       <div style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.08em', marginBottom: 8 }}>
         {currentSession?.isBenchmark ? 'STARTING SESSION' :
-         currentSession?.isCheckin ? 'PROGRESS CHECK' :
-         `WEEK ${completedSessions.length + 1} TRAINING SESSION`}
+          currentSession?.isCheckin ? 'PROGRESS CHECK' :
+            `WEEK ${completedSessions.length + 1} TRAINING SESSION`}
       </div>
       <div style={{ fontFamily: "'Clash Display', sans-serif", fontSize: 22, fontWeight: 700, color: C.text, marginBottom: 4 }}>
         Theme: {currentSession?.theme || 'Loading...'}
@@ -3514,8 +3514,8 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
         <div style={{ display: "flex", gap: 8 }}>
           {[
             { id: "free", label: "Free", price: "$0", features: ["3 curated questions", "Full feedback", "Unlimited resubmissions"], trial: null },
-            { id: "basic", label: "Basic", price: "$12.90/mo", features: ["Full question bank", "Progress dashboard", "7-day free trial"], trial: "7-day free trial — no card needed yet" },
-            { id: "plus", label: "Plus", price: "$15.90/mo", features: ["Everything in Basic", "+ My Questions", "7-day free trial"], trial: "7-day free trial — no card needed yet", popular: true },
+            { id: "basic", label: "Basic", price: "$12.90/mo", features: ["Weekly sessions", "Progress dashboard", "7-day free trial"], trial: "7-day free trial — no card needed yet" },
+            { id: "plus", label: "Plus", price: "$15.90/mo", features: ["Everything in Basic", "+ Timed simulations", "7-day free trial"], trial: "7-day free trial — no card needed yet", popular: true },
           ].map(t => (
             <div key={t.id} onClick={() => setSelectedTier(t.id)}
               style={{ flex: 1, border: `2px solid ${selectedTier === t.id ? C.coral : C.border}`, borderRadius: 12, padding: "12px 10px", cursor: "pointer", background: selectedTier === t.id ? C.coralL : "#fff", position: "relative", transition: "border-color 0.15s, background 0.15s" }}>
@@ -3560,9 +3560,9 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
   ];
   const sylOpts = [
     { id: "O-Elective", label: "O-Level Elective", sub: "Humanities 2260" },
-    { id: "O-Pure",     label: "O-Level Pure",     sub: "Syllabus 2279" },
-    { id: "N-Elective", label: "N-Level Elective",  sub: "Humanities 2125" },
-    { id: "N-Pure",     label: "N-Level Pure",      sub: "Syllabus 2246" },
+    { id: "O-Pure", label: "O-Level Pure", sub: "Syllabus 2279" },
+    { id: "N-Elective", label: "N-Level Elective", sub: "Humanities 2125" },
+    { id: "N-Pure", label: "N-Level Pure", sub: "Syllabus 2246" },
   ];
   const availableSyllabuses = data.year === "sec5"
     ? sylOpts.filter(s => s.id === "O-Elective" || s.id === "O-Pure")
@@ -3651,8 +3651,8 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
         <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 8 }}>
           <div style={{ color: C.mid, fontSize: 13, marginBottom: 4 }}>Have you covered the full Geography syllabus?</div>
           {[
-            { id: "all_yes",   icon: "✓", label: "Yes — I've covered the full syllabus" },
-            { id: "choose",    icon: "☐", label: "No — let me choose my topics" },
+            { id: "all_yes", icon: "✓", label: "Yes — I've covered the full syllabus" },
+            { id: "choose", icon: "☐", label: "No — let me choose my topics" },
             { id: "all_unsure", icon: "?", label: "Not sure — show me everything" },
           ].map(c => (
             <button key={c.id} onClick={() => {
@@ -3731,8 +3731,8 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
   const isOLevel = ["O-Elective", "O-Pure"].includes(data.syllabus);
   const isNLevel = ["N-Elective", "N-Pure"].includes(data.syllabus);
   const examOpts = [
-    { id: "midyear", label: "Mid-year exam",   sub: "May / June" },
-    { id: "prelim",  label: "Preliminary exam", sub: "Aug / Sept" },
+    { id: "midyear", label: "Mid-year exam", sub: "May / June" },
+    { id: "prelim", label: "Preliminary exam", sub: "Aug / Sept" },
     ...(isOLevel ? [{ id: "olevels", label: "O-Level", sub: "Oct / Nov" }] : []),
     ...(isNLevel ? [{ id: "nlevels", label: "N-Level", sub: "Oct / Nov" }] : []),
     { id: "notsure", label: "Not sure yet", sub: null },
@@ -3767,41 +3767,41 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
   const Screen5 = () => (
     <div className="fade">
       <button onClick={() => setStep(p => p - 1)} style={{ background: "none", border: "none", color: C.mid, fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 6, padding: "8px 0", marginBottom: 16 }}>← Back</button>
-    <div style={{ textAlign: "center" }}>
-      <div style={{ width: 52, height: 52, background: C.greenL, borderRadius: 14, display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
-        <span style={{ color: C.green, fontSize: 24, fontWeight: 700 }}>✓</span>
-      </div>
-      <div style={{ fontFamily: "'Clash Display',sans-serif", fontSize: 24, fontWeight: 700, color: C.text, marginBottom: 8 }}>
-        Your training programme is ready.
-      </div>
-      <div style={{ color: C.mid, fontSize: 14, marginBottom: 36 }}>
-        {firstName ? `Welcome, ${firstName}. Let's get started.` : "Let's get started."}
-      </div>
+      <div style={{ textAlign: "center" }}>
+        <div style={{ width: 52, height: 52, background: C.greenL, borderRadius: 14, display: "inline-flex", alignItems: "center", justifyContent: "center", marginBottom: 16 }}>
+          <span style={{ color: C.green, fontSize: 24, fontWeight: 700 }}>✓</span>
+        </div>
+        <div style={{ fontFamily: "'Clash Display',sans-serif", fontSize: 24, fontWeight: 700, color: C.text, marginBottom: 8 }}>
+          Your training programme is ready.
+        </div>
+        <div style={{ color: C.mid, fontSize: 14, marginBottom: 36 }}>
+          {firstName ? `Welcome, ${firstName}. Let's get started.` : "Let's get started."}
+        </div>
 
-      <div style={{ background: "#fff", border: `1.5px solid ${C.border}`, borderRadius: 16, padding: "22px 24px", marginBottom: 14, textAlign: "left", boxShadow: "0 2px 12px rgba(255,107,53,0.07)" }}>
-        <div style={{ color: C.light, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", marginBottom: 10 }}>WEEK 1 — STARTING POINT</div>
-        <div style={{ fontFamily: "'Clash Display',sans-serif", fontWeight: 700, color: C.text, fontSize: 17, marginBottom: 6 }}>Benchmark Session</div>
-        <div style={{ color: C.mid, fontSize: 13, marginBottom: 14 }}>
-          Theme: Foundations<br />
-          Q1 — Describe · Q2 — Explain · Q3 — Evaluate
+        <div style={{ background: "#fff", border: `1.5px solid ${C.border}`, borderRadius: 16, padding: "22px 24px", marginBottom: 14, textAlign: "left", boxShadow: "0 2px 12px rgba(255,107,53,0.07)" }}>
+          <div style={{ color: C.light, fontSize: 11, fontWeight: 700, letterSpacing: "0.08em", marginBottom: 10 }}>WEEK 1 — STARTING POINT</div>
+          <div style={{ fontFamily: "'Clash Display',sans-serif", fontWeight: 700, color: C.text, fontSize: 17, marginBottom: 6 }}>Benchmark Session</div>
+          <div style={{ color: C.mid, fontSize: 13, marginBottom: 14 }}>
+            Theme: Foundations<br />
+            Q1 — Describe · Q2 — Explain · Q3 — Evaluate
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+            <span style={{ color: C.light, fontSize: 12 }}>Estimated time: 45–55 minutes</span>
+          </div>
+          <div style={{ padding: "10px 12px", background: C.coralL, borderRadius: 8 }}>
+            <div style={{ color: C.green, fontSize: 12, fontWeight: 600 }}>This session helps us understand where you're starting from.</div>
+          </div>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-          <span style={{ color: C.light, fontSize: 12 }}>Estimated time: 45–55 minutes</span>
-        </div>
-        <div style={{ padding: "10px 12px", background: C.coralL, borderRadius: 8 }}>
-          <div style={{ color: C.green, fontSize: 12, fontWeight: 600 }}>This session helps us understand where you're starting from.</div>
-        </div>
-      </div>
 
-      <button onClick={() => onComplete({ ...data, isBenchmark: true })} className="hl"
-        style={{ width: "100%", background: C.coral, color: C.deepBg, border: "none", borderRadius: 12, padding: 14, fontWeight: 700, fontSize: 15, marginBottom: 10 }}>
-        Start my first session →
-      </button>
-      <button onClick={() => onComplete({ ...data, isBenchmark: false })}
-        style={{ width: "100%", background: "none", color: C.mid, border: "none", borderRadius: 12, padding: 12, fontWeight: 500, fontSize: 14, cursor: "pointer" }}>
-        I'll come back later
-      </button>
-    </div>
+        <button onClick={() => onComplete({ ...data, isBenchmark: true })} className="hl"
+          style={{ width: "100%", background: C.coral, color: C.deepBg, border: "none", borderRadius: 12, padding: 14, fontWeight: 700, fontSize: 15, marginBottom: 10 }}>
+          Start my first session →
+        </button>
+        <button onClick={() => onComplete({ ...data, isBenchmark: false })}
+          style={{ width: "100%", background: "none", color: C.mid, border: "none", borderRadius: 12, padding: 12, fontWeight: 500, fontSize: 14, cursor: "pointer" }}>
+          I'll come back later
+        </button>
+      </div>
     </div>
   );
 
@@ -3931,9 +3931,9 @@ const AccountSettings = ({ user, onUpdate, onSyllabusChange, onClose }) => {
 
   const sylOpts = [
     { id: "O-Elective", label: "O-Level Elective Geography (2260)" },
-    { id: "O-Pure",     label: "O-Level Pure Geography (2279)" },
+    { id: "O-Pure", label: "O-Level Pure Geography (2279)" },
     { id: "N-Elective", label: "N-Level Elective Geography (2125)" },
-    { id: "N-Pure",     label: "N-Level Pure Geography (2246)" },
+    { id: "N-Pure", label: "N-Level Pure Geography (2246)" },
   ];
 
   const handleSave = () => {
@@ -5090,8 +5090,8 @@ const SessionConclusion = ({ session, records, sessionStartTime, sessionEndTime,
             {session?.isBenchmark
               ? "Starting point recorded. We'll check in again in 4 weeks."
               : session?.isCheckin
-              ? "Progress check complete — see your improvement on the dashboard."
-              : "Good work. See you next week."}
+                ? "Progress check complete — see your improvement on the dashboard."
+                : "Good work. See you next week."}
           </p>
           {/* Total marks (point questions) */}
           {totalPossible > 0 && (
@@ -5588,8 +5588,8 @@ const FreeSessionView = ({ session, syllabus, onAttempt, user, onSignup, records
   const tc = user?.topicsCovered;
   const coveredClusterNames = Array.isArray(tc) && tc.length > 0
     ? Object.entries(ONBOARDING_TOPICS)
-        .filter(([, topics]) => topics.some(t => tc.includes(t.id)))
-        .map(([cluster]) => cluster)
+      .filter(([, topics]) => topics.some(t => tc.includes(t.id)))
+      .map(([cluster]) => cluster)
     : [];
   const upgradeMsg = coveredClusterNames.length > 0
     ? `Upgrade to Basic to get weekly sessions covering ${coveredClusterNames.join(", ")} — tailored to where you struggle.`
@@ -5649,7 +5649,7 @@ const FreeSessionView = ({ session, syllabus, onAttempt, user, onSignup, records
             <div style={{ background: C.midBg, borderRadius: 10, padding: "16px", border: `1px solid ${C.borderOnDark}`, marginBottom: 10 }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: C.textOnDark, opacity: 0.5, letterSpacing: "0.08em", marginBottom: 12 }}>YOUR REASONING PROGRESS</div>
               <div style={{ display: "flex", alignItems: "flex-end", gap: 6, height: 56 }}>
-                {["L1","L1","L2","L1","L2","L2","L3"].map((b, i) => {
+                {["L1", "L1", "L2", "L1", "L2", "L2", "L3"].map((b, i) => {
                   const h = b === "L3" ? 56 : b === "L2" ? 38 : 22;
                   const col = b === "L3" ? "#a8d080" : b === "L2" ? "#c8a85a" : "#3a5448";
                   return <div key={i} style={{ flex: 1, height: h, borderRadius: 4, background: col, opacity: 0.7 }} />;
@@ -5723,25 +5723,25 @@ const FreeSessionView = ({ session, syllabus, onAttempt, user, onSignup, records
 const StudentIllustration = () => (
   <svg viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", maxWidth: 200, opacity: 0.18 }}>
     {/* desk */}
-    <rect x="20" y="160" width="160" height="8" rx="4" stroke="#f5f0e8" strokeWidth="2"/>
+    <rect x="20" y="160" width="160" height="8" rx="4" stroke="#f5f0e8" strokeWidth="2" />
     {/* paper */}
-    <rect x="60" y="110" width="90" height="55" rx="4" stroke="#f5f0e8" strokeWidth="2"/>
-    <line x1="70" y1="125" x2="140" y2="125" stroke="#f5f0e8" strokeWidth="1.5"/>
-    <line x1="70" y1="135" x2="130" y2="135" stroke="#f5f0e8" strokeWidth="1.5"/>
-    <line x1="70" y1="145" x2="120" y2="145" stroke="#f5f0e8" strokeWidth="1.5"/>
+    <rect x="60" y="110" width="90" height="55" rx="4" stroke="#f5f0e8" strokeWidth="2" />
+    <line x1="70" y1="125" x2="140" y2="125" stroke="#f5f0e8" strokeWidth="1.5" />
+    <line x1="70" y1="135" x2="130" y2="135" stroke="#f5f0e8" strokeWidth="1.5" />
+    <line x1="70" y1="145" x2="120" y2="145" stroke="#f5f0e8" strokeWidth="1.5" />
     {/* arm + hand */}
-    <path d="M80 110 Q75 90 90 85" stroke="#f5f0e8" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M80 110 Q75 90 90 85" stroke="#f5f0e8" strokeWidth="2" strokeLinecap="round" />
     {/* pen */}
-    <line x1="90" y1="85" x2="105" y2="100" stroke="#f5f0e8" strokeWidth="2" strokeLinecap="round"/>
-    <polygon points="105,100 112,95 108,106" fill="#f5f0e8" opacity="0.5"/>
+    <line x1="90" y1="85" x2="105" y2="100" stroke="#f5f0e8" strokeWidth="2" strokeLinecap="round" />
+    <polygon points="105,100 112,95 108,106" fill="#f5f0e8" opacity="0.5" />
     {/* head */}
-    <circle cx="100" cy="55" r="24" stroke="#f5f0e8" strokeWidth="2"/>
+    <circle cx="100" cy="55" r="24" stroke="#f5f0e8" strokeWidth="2" />
     {/* hair */}
-    <path d="M76 50 Q80 30 100 28 Q120 30 124 50" stroke="#f5f0e8" strokeWidth="2" fill="none"/>
+    <path d="M76 50 Q80 30 100 28 Q120 30 124 50" stroke="#f5f0e8" strokeWidth="2" fill="none" />
     {/* body */}
-    <path d="M82 78 Q80 95 80 110" stroke="#f5f0e8" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M118 78 Q120 95 120 110" stroke="#f5f0e8" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M82 78 Q100 85 118 78" stroke="#f5f0e8" strokeWidth="2" fill="none"/>
+    <path d="M82 78 Q80 95 80 110" stroke="#f5f0e8" strokeWidth="2" strokeLinecap="round" />
+    <path d="M118 78 Q120 95 120 110" stroke="#f5f0e8" strokeWidth="2" strokeLinecap="round" />
+    <path d="M82 78 Q100 85 118 78" stroke="#f5f0e8" strokeWidth="2" fill="none" />
   </svg>
 );
 
