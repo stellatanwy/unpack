@@ -3441,10 +3441,12 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
     setPromoLoading(true);
     setPromoError(null);
     // TODO: validate against Supabase invite_codes table when live
-    const validCodes = ["UNPACK2025", "BETA2025"];
+    const code = promoCode.trim().toUpperCase();
+    const codeValid = code === "UNPACK2026";
+    const codeExpired = new Date() > new Date("2026-04-30T23:59:59+08:00");
     await new Promise(r => setTimeout(r, 600)); // simulate check
-    if (!validCodes.includes(promoCode.trim().toUpperCase())) {
-      setPromoError("Invalid invite code. Check with the Unpack team.");
+    if (!codeValid || codeExpired) {
+      setPromoError(codeExpired ? "This invite code has expired." : "Invalid invite code. Check with the Unpack team.");
       setPromoLoading(false);
       return;
     }
