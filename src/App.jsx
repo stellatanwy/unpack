@@ -3392,6 +3392,11 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
   const [tcAccepted, setTcAccepted] = useState(false);
   const [screen1Loading, setScreen1Loading] = useState(false);
   const [screen1Error, setScreen1Error] = useState(null);
+  const [selectedTier, setSelectedTier] = useState("free");
+  const [showPromoCode, setShowPromoCode] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoError, setPromoError] = useState(null);
+  const [promoLoading, setPromoLoading] = useState(false);
 
   const update = (patch) => setData(prev => ({ ...prev, ...patch }));
 
@@ -3423,8 +3428,28 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
       const { error } = await supabase.auth.signUp({ email: data.email, password: data.password });
       if (error) { setScreen1Error(error.message); setScreen1Loading(false); return; }
     }
-    goNext({ password: "" });
+    if (selectedTier === "free") {
+      goNext({ password: "", tier: "free" });
+    } else {
+      setShowPromoCode(true);
+    }
     setScreen1Loading(false);
+  };
+
+  const handlePromoSubmit = async () => {
+    if (!promoCode.trim()) { setPromoError("Please enter an invite code."); return; }
+    setPromoLoading(true);
+    setPromoError(null);
+    // TODO: validate against Supabase invite_codes table when live
+    const validCodes = ["UNPACK2025", "BETA2025"];
+    await new Promise(r => setTimeout(r, 600)); // simulate check
+    if (!validCodes.includes(promoCode.trim().toUpperCase())) {
+      setPromoError("Invalid invite code. Check with the Unpack team.");
+      setPromoLoading(false);
+      return;
+    }
+    goNext({ password: "", tier: selectedTier });
+    setPromoLoading(false);
   };
 
   const inp = { width: "100%", background: "#fff", border: `1.5px solid ${C.border}`, borderRadius: 12, padding: "13px 15px", color: C.text, fontSize: 15, marginBottom: 6, display: "block" };
@@ -3472,6 +3497,32 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
       <input value={data.password} type="password" placeholder="Password (min. 8 characters)" style={{ ...inp, borderColor: errors.password ? C.red : C.border }}
         onChange={e => { update({ password: e.target.value }); setErrors(p => ({ ...p, password: null })); }} />
       {errors.password && <span style={errTxt}>{errors.password}</span>}
+
+      {/* ── Tier selector ── */}
+      <div style={{ marginTop: 20, marginBottom: 4 }}>
+        <div style={{ color: C.mid, fontSize: 13, fontWeight: 600, marginBottom: 10 }}>Choose your plan</div>
+        <div style={{ display: "flex", gap: 8 }}>
+          {[
+            { id: "free", label: "Free", price: "$0", features: ["3 curated questions", "Full feedback", "Unlimited resubmissions"], trial: null },
+            { id: "basic", label: "Basic", price: "$12.90/mo", features: ["Full question bank", "Progress dashboard", "7-day free trial"], trial: "7-day free trial — no card needed yet" },
+            { id: "plus", label: "Plus", price: "$15.90/mo", features: ["Everything in Basic", "+ My Questions", "7-day free trial"], trial: "7-day free trial — no card needed yet", popular: true },
+          ].map(t => (
+            <div key={t.id} onClick={() => setSelectedTier(t.id)}
+              style={{ flex: 1, border: `2px solid ${selectedTier === t.id ? C.coral : C.border}`, borderRadius: 12, padding: "12px 10px", cursor: "pointer", background: selectedTier === t.id ? C.coralL : "#fff", position: "relative", transition: "border-color 0.15s, background 0.15s" }}>
+              {t.popular && <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", background: C.coral, color: C.deepBg, fontSize: 9, fontWeight: 700, borderRadius: 20, padding: "2px 8px", whiteSpace: "nowrap" }}>Most popular</div>}
+              <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 2 }}>{t.label}</div>
+              <div style={{ fontWeight: 700, fontSize: 12, color: C.coral, marginBottom: 8 }}>{t.price}</div>
+              {t.features.map(f => <div key={f} style={{ fontSize: 11, color: C.mid, lineHeight: 1.6 }}>{f}</div>)}
+            </div>
+          ))}
+        </div>
+        {(selectedTier === "basic" || selectedTier === "plus") && (
+          <div style={{ fontSize: 11, color: C.mid, marginTop: 8, textAlign: "center", fontStyle: "italic" }}>
+            During beta — enter an invite code after signup to unlock
+          </div>
+        )}
+      </div>
+
       <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 18, marginBottom: 4, cursor: "pointer" }}>
         <input type="checkbox" checked={tcAccepted} onChange={e => { setTcAccepted(e.target.checked); setErrors(p => ({ ...p, terms: null })); }}
           style={{ marginTop: 3, accentColor: C.coral, flexShrink: 0, width: 16, height: 16 }} />
@@ -3759,7 +3810,27 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
           )}
         </div>
         {step >= 2 && step <= 4 && ProgressBar()}
-        {step === 1 && Screen1()}
+        {step === 1 && !showPromoCode && Screen1()}
+        {step === 1 && showPromoCode && (
+          <div className="fade">
+            <div style={{ marginBottom: 28 }}>
+              <div style={{ fontFamily: "'Clash Display',sans-serif", fontSize: 24, fontWeight: 700, color: C.text, marginBottom: 8 }}>Enter your invite code</div>
+              <div style={{ color: C.mid, fontSize: 14 }}>Your account is created. Enter a beta invite code to unlock {selectedTier === "plus" ? "Plus" : "Basic"}.</div>
+            </div>
+            <input value={promoCode} onChange={e => { setPromoCode(e.target.value); setPromoError(null); }}
+              placeholder="Invite code (e.g. UNPACK2025)"
+              style={{ width: "100%", background: "#fff", border: `1.5px solid ${promoError ? C.red : C.border}`, borderRadius: 12, padding: "13px 15px", color: C.text, fontSize: 15, marginBottom: 6, display: "block" }} />
+            {promoError && <div style={{ color: C.red, fontSize: 12, marginBottom: 10 }}>{promoError}</div>}
+            <button onClick={handlePromoSubmit} disabled={promoLoading} className="hl"
+              style={{ width: "100%", background: C.coral, color: C.deepBg, border: "none", borderRadius: 12, padding: 14, fontWeight: 700, fontSize: 15, marginTop: 8, opacity: promoLoading ? 0.7 : 1 }}>
+              {promoLoading ? "Checking…" : "Unlock access →"}
+            </button>
+            <button onClick={() => { goNext({ password: "", tier: "free" }); setShowPromoCode(false); }}
+              style={{ width: "100%", background: "none", border: "none", color: C.light, fontSize: 13, marginTop: 10, cursor: "pointer", padding: "8px 0" }}>
+              Skip — continue as Free
+            </button>
+          </div>
+        )}
         {step === 2 && Screen2()}
         {step === 3 && Screen3()}
         {step === 4 && Screen4()}
@@ -6014,7 +6085,7 @@ export default function App() {
     const userData = {
       name: onboardingData.name || "Student",
       email: onboardingData.email || "",
-      tier: "free-account",
+      tier: onboardingData.tier === "basic" ? "basic" : onboardingData.tier === "plus" ? "plus" : "free-account",
       syllabus: sylId,
       year: onboardingData.year || ONBOARDING_DEFAULTS.year,
       school: onboardingData.school || "",
