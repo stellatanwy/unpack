@@ -3793,11 +3793,11 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
           </div>
         </div>
 
-        <button onClick={() => onComplete({ ...data, isBenchmark: true })} className="hl"
+        <button onClick={() => onComplete({ ...data, tier: selectedTier, isBenchmark: true })} className="hl"
           style={{ width: "100%", background: C.coral, color: C.deepBg, border: "none", borderRadius: 12, padding: 14, fontWeight: 700, fontSize: 15, marginBottom: 10 }}>
           Start my first session →
         </button>
-        <button onClick={() => onComplete({ ...data, isBenchmark: false })}
+        <button onClick={() => onComplete({ ...data, tier: selectedTier, isBenchmark: false })}
           style={{ width: "100%", background: "none", color: C.mid, border: "none", borderRadius: 12, padding: 12, fontWeight: 500, fontSize: 14, cursor: "pointer" }}>
           I'll come back later
         </button>
