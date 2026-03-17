@@ -4476,7 +4476,7 @@ const ThisWeekTab = ({ session, syllabus, onAttempt, user, onUpgrade, onSettings
 };
 
 // ─── PAPER SIMULATION ─────────────────────────────────────────────────────────
-const PaperSimulation = ({ user, syllabus, onAttempt, onUpgrade }) => {
+const PaperSimulation = ({ user, syllabus, onAttempt, onUpgrade, allQuestions = [] }) => {
   const [step, setStep] = useState("entry"); // entry | select-paper | select-section-b | briefing | in-progress | complete
   const [selectedPaper, setSelectedPaper] = useState(null);
   const [selectedSectionB, setSelectedSectionB] = useState(null);
@@ -4548,7 +4548,7 @@ const PaperSimulation = ({ user, syllabus, onAttempt, onUpgrade }) => {
   };
 
   const selectSimulationQuestions = (papDef, sectionBCluster) => {
-    const pool = QUESTION_BANK.filter(q =>
+    const pool = allQuestions.filter(q =>
       q.syllabus.includes(syllabus) &&
       !q.figureRequired &&
       q.tier === "paid"
@@ -5023,9 +5023,9 @@ const PaperSimulation = ({ user, syllabus, onAttempt, onUpgrade }) => {
 };
 
 // ─── SESSION CONCLUSION ───────────────────────────────────────────────────────
-const SessionConclusion = ({ session, records, sessionStartTime, sessionEndTime, user, onGoToDashboard, onGoBonusQuestions, onStartExtension }) => {
+const SessionConclusion = ({ session, records, sessionStartTime, sessionEndTime, user, onGoToDashboard, onGoBonusQuestions, onStartExtension, allQuestions = [] }) => {
   const questionJourneys = (session?.questions || []).map(qId => {
-    const q = QUESTION_BANK.find(x => x.id === qId);
+    const q = allQuestions.find(x => x.id === qId);
     const qRecords = records.filter(r => r.questionId === qId).sort((a, b) => a.timestamp - b.timestamp);
     const firstBand = qRecords[0]?.parsed?.markBand || null;
     const lastBand = qRecords[qRecords.length - 1]?.parsed?.markBand || null;
@@ -5051,8 +5051,8 @@ const SessionConclusion = ({ session, records, sessionStartTime, sessionEndTime,
 
   const extensionQuestions = useMemo(() => {
     if (!showExtension) return [];
-    const sessionClusters = new Set((session?.questions || []).map(qId => QUESTION_BANK.find(x => x.id === qId)?.cluster));
-    const pool = QUESTION_BANK.filter(q =>
+    const sessionClusters = new Set((session?.questions || []).map(qId => allQuestions.find(x => x.id === qId)?.cluster));
+    const pool = allQuestions.filter(q =>
       q.syllabus.includes(user.syllabus) &&
       !q.figureRequired &&
       !(session?.questions || []).includes(q.id) &&
@@ -5209,7 +5209,7 @@ const SessionConclusion = ({ session, records, sessionStartTime, sessionEndTime,
 };
 
 // ─── PRACTICE TAB ─────────────────────────────────────────────────────────────
-const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpgrade, onSignup }) => {
+const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpgrade, onSignup, allQuestions = [] }) => {
   const [practiceMode, setPracticeMode] = useState(null); // null | 'bonus' | 'timed'
   const [selectedBonusQ, setSelectedBonusQ] = useState(null);
   const [timedConfig, setTimedConfig] = useState({ skill: null, marks: null });
@@ -5242,7 +5242,7 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
     if (!sessionComplete) return [];
     const recentIds = new Set(records.filter(r => Date.now() - r.timestamp < 7 * 24 * 60 * 60 * 1000).map(r => r.questionId));
     const sessionIds = new Set(currentSession?.questions || []);
-    const pool = QUESTION_BANK.filter(q =>
+    const pool = allQuestions.filter(q =>
       q.syllabus.includes(user.syllabus) &&
       !q.figureRequired &&
       !sessionIds.has(q.id) &&
@@ -5254,7 +5254,7 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
 
   // Timed question selection
   const selectTimedQuestion = () => {
-    const pool = QUESTION_BANK.filter(q => {
+    const pool = allQuestions.filter(q => {
       if (!q.syllabus.includes(user.syllabus)) return false;
       if (q.figureRequired) return false;
       if (timedConfig.skill && q.skill !== timedConfig.skill) return false;
@@ -5534,7 +5534,7 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
       {/* FULL PAPER SIMULATION */}
       <div style={{ marginTop: 4 }}>
         <div style={{ fontWeight: 700, fontSize: 11, color: C.light, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>Full Paper Simulation</div>
-        <PaperSimulation user={user} syllabus={syllabus} onAttempt={onAttempt} onUpgrade={onUpgrade} />
+        <PaperSimulation user={user} syllabus={syllabus} onAttempt={onAttempt} onUpgrade={onUpgrade} allQuestions={allQuestions} />
       </div>
     </div>
   );
@@ -5575,9 +5575,9 @@ const SignupPromptModal = ({ type, onSignup, onClose }) => {
 };
 
 // ─── FREE SESSION VIEW ─────────────────────────────────────────────────────────
-const FreeSessionView = ({ session, syllabus, onAttempt, user, onSignup, records = [] }) => {
-  const freeIds = QUESTION_BANK.filter(q => q.tier === "free" && !q.figureRequired && q.syllabus.includes(syllabus)).slice(0, 3).map(q => q.id);
-  const sessionQs = (session?.questions || freeIds).map(id => QUESTION_BANK.find(q => q.id === id)).filter(Boolean);
+const FreeSessionView = ({ session, syllabus, onAttempt, user, onSignup, records = [], allQuestions = [] }) => {
+  const freeIds = allQuestions.filter(q => q.tier === "free" && !q.figureRequired && q.syllabus.includes(syllabus)).slice(0, 3).map(q => q.id);
+  const sessionQs = (session?.questions || freeIds).map(id => allQuestions.find(q => q.id === id)).filter(Boolean);
   const total = sessionQs.length;
   const sessionCompleted = session?.completed || [];
 
@@ -5913,6 +5913,7 @@ const Landing = ({ onStart, onSignup }) => (
 );
 
 export default function App() {
+  const [hiddenQIds, setHiddenQIds] = useState(new Set());
   const [page, setPage] = useState("home");
   const [tab, setTab] = useState("thisweek");
   const [user, setUser] = useState(null);
@@ -5937,6 +5938,7 @@ export default function App() {
   const [showConclusion, setShowConclusion] = useState(false);
   const [extensionQuestions, setExtensionQuestions] = useState([]);
   const profileLoadedRef = useRef(false);
+  const activeBank = useMemo(() => QUESTION_BANK.filter(q => !hiddenQIds.has(q.id)), [hiddenQIds]);
 
   const switchDevUser = useCallback((dir) => {
     const next = (devUserIndex + dir + DEV_USERS.length) % DEV_USERS.length;
@@ -5950,7 +5952,7 @@ export default function App() {
     setRecords([]);
     setShowConclusion(false);
     // Generate a fresh session for the new profile
-    const newSess = generateSession(mock.tier !== null ? mock : null, [], QUESTION_BANK, null, []);
+    const newSess = generateSession(mock.tier !== null ? mock : null, [], activeBank, null, []);
     setSession(newSess);
   }, [devUserIndex]);
 
@@ -5975,16 +5977,16 @@ export default function App() {
       ? { ...u, tier: sbProfile?.tier ?? u.tier, onboardingComplete: sbProfile?.onboarding_complete ?? u.onboardingComplete }
       : sbProfile?.onboarding_complete
         ? {
-            name: sbProfile.name || "Student",
-            email: supabaseUser.email || "",
-            tier: sbProfile.tier || "free-account",
-            syllabus: sbProfile.syllabus || "O-Elective",
-            year: sbProfile.year || ONBOARDING_DEFAULTS.year,
-            school: sbProfile.school || "",
-            topicsCovered: sbProfile.topics_covered || ONBOARDING_DEFAULTS.topicsCovered,
-            examType: sbProfile.exam_type || ONBOARDING_DEFAULTS.examType,
-            examDate: null, previousExamDate: null, sessionResetDay: 1, onboardingComplete: true,
-          }
+          name: sbProfile.name || "Student",
+          email: supabaseUser.email || "",
+          tier: sbProfile.tier || "free-account",
+          syllabus: sbProfile.syllabus || "O-Elective",
+          year: sbProfile.year || ONBOARDING_DEFAULTS.year,
+          school: sbProfile.school || "",
+          topicsCovered: sbProfile.topics_covered || ONBOARDING_DEFAULTS.topicsCovered,
+          examType: sbProfile.exam_type || ONBOARDING_DEFAULTS.examType,
+          examDate: null, previousExamDate: null, sessionResetDay: 1, onboardingComplete: true,
+        }
         : null;
 
     if (effectiveUser) {
@@ -6001,7 +6003,7 @@ export default function App() {
       const existingSess = await sg("gm4_session");
       const currentWeek = getWeekStart();
       if (!existingSess || existingSess.weekStart !== currentWeek) {
-        const newSess = generateSession({ ...effectiveUser, syllabus: effectiveSyl }, r || [], QUESTION_BANK, existingSess, cs || []);
+        const newSess = generateSession({ ...effectiveUser, syllabus: effectiveSyl }, r || [], activeBank, existingSess, cs || []);
         setSession(newSess);
         await ss("gm4_session", newSess);
       } else {
@@ -6020,6 +6022,13 @@ export default function App() {
       }
       setShowOnboarding(true);
     }
+  }, []);
+
+  useEffect(() => {
+    // Fetch hidden question IDs from Supabase so they are excluded from student view
+    supabase.from("questions").select("id").eq("hidden", true).then(({ data }) => {
+      if (data?.length) setHiddenQIds(new Set(data.map(q => q.id)));
+    });
   }, []);
 
   useEffect(() => {
@@ -6058,7 +6067,7 @@ export default function App() {
       const n = freeCount + 1;
       setFreeCount(n);
       await ss("gm4_free", n);
-      const freeQIds = QUESTION_BANK.filter(q => q.tier === "free" && !q.figureRequired && q.syllabus.includes(syllabus || "O-Elective")).map(q => q.id);
+      const freeQIds = activeBank.filter(q => q.tier === "free" && !q.figureRequired && q.syllabus.includes(syllabus || "O-Elective")).map(q => q.id);
       const allAttemptedNow = freeQIds.every(id => id === record.questionId || records.some(r => r.questionId === id));
       if (allAttemptedNow) setSignupPrompt("completed");
     }
@@ -6112,7 +6121,7 @@ export default function App() {
     // Generate session for signed-in user
     const existingSess = await sg("gm4_session");
     const cs = await sg("gm4_completed_sessions");
-    const newSess = generateSession({ ...userData, syllabus }, records, QUESTION_BANK, existingSess, cs || []);
+    const newSess = generateSession({ ...userData, syllabus }, records, activeBank, existingSess, cs || []);
     setSession(newSess);
     await ss("gm4_session", newSess);
     setPage("app");
@@ -6156,7 +6165,7 @@ export default function App() {
         updated_at: new Date().toISOString(),
       });
     }
-    const newSess = generateSession({ ...userData, syllabus: sylId }, records, QUESTION_BANK, null, []);
+    const newSess = generateSession({ ...userData, syllabus: sylId }, records, activeBank, null, []);
     setSession(newSess);
     await ss("gm4_session", newSess);
     setShowOnboarding(false);
@@ -6168,7 +6177,7 @@ export default function App() {
     setUser(updatedUser);
     await ss("gm4_user", updatedUser);
     // Regenerate session with new exam date
-    const newSess = generateSession({ ...updatedUser, syllabus }, records, QUESTION_BANK, null, completedSessions);
+    const newSess = generateSession({ ...updatedUser, syllabus }, records, activeBank, null, completedSessions);
     setSession(newSess);
     await ss("gm4_session", newSess);
   };
@@ -6181,7 +6190,7 @@ export default function App() {
     // Regenerate session with updated topics (paid users only — free pool is fixed by syllabus)
     const isPaid = updatedUser.tier === "basic" || updatedUser.tier === "plus";
     if (isPaid) {
-      const newSession = generateSession(updatedUser, records, QUESTION_BANK, null, completedSessions);
+      const newSession = generateSession(updatedUser, records, activeBank, null, completedSessions);
       if (newSession) {
         setSession(newSession);
         await ss("gm4_session", newSession);
@@ -6198,7 +6207,7 @@ export default function App() {
     setSyllabus(newSyllabus);
     await ss("gm4_user", updatedUser);
     await ss("gm4_syllabus", newSyllabus);
-    const newSess = generateSession(updatedUser, records, QUESTION_BANK, null, completedSessions);
+    const newSess = generateSession(updatedUser, records, activeBank, null, completedSessions);
     setSession(newSess);
     await ss("gm4_session", newSess);
   };
@@ -6219,8 +6228,8 @@ export default function App() {
   const daysToExam = examDate ? Math.ceil((examDate - today) / (1000 * 60 * 60 * 24)) : null;
   const examMode = daysToExam !== null && daysToExam <= 14;
 
-  const freeQs = QUESTION_BANK.filter(q => q.tier === "free" && q.syllabus.includes(syllabus));
-  const paidQs = QUESTION_BANK.filter(q =>
+  const freeQs = activeBank.filter(q => q.tier === "free" && q.syllabus.includes(syllabus));
+  const paidQs = activeBank.filter(q =>
     (examMode || q.tier === "paid") && q.syllabus.includes(syllabus)
     && (filterC === "All" || q.cluster === filterC) && (filterS === "All" || q.skill === filterS));
 
@@ -6287,7 +6296,7 @@ export default function App() {
         <div style={{ maxWidth: tab === "thisweek" ? 1100 : 860, margin: "0 auto", padding: tab === "thisweek" ? "24px 0" : "24px 14px", background: (tab === "thisweek" && showConclusion) ? C.deepBg : undefined, minHeight: (tab === "thisweek" && showConclusion) ? "calc(100vh - 56px)" : undefined }}>
           {/* Free users — whole screen, no tab bar */}
           {(tier === null || tier === "free-account") ? (
-            <FreeSessionView session={session} syllabus={syllabus} onAttempt={handleAttempt} user={user} onSignup={tier === null ? () => setShowOnboarding(true) : handleUpgrade} records={records} />
+            <FreeSessionView session={session} syllabus={syllabus} onAttempt={handleAttempt} user={user} onSignup={tier === null ? () => setShowOnboarding(true) : handleUpgrade} records={records} allQuestions={activeBank} />
           ) : (
             <>
               {/* Tab bar — hidden during session conclusion */}
@@ -6320,6 +6329,7 @@ export default function App() {
                     onGoToDashboard={() => { setShowConclusion(false); setTab("dashboard"); }}
                     onGoBonusQuestions={() => { setShowConclusion(false); setTab("practice"); }}
                     onStartExtension={(qs) => { setShowConclusion(false); setExtensionQuestions(qs); setTab("practice"); }}
+                    allQuestions={activeBank}
                   />
                 ) : canAccess(tier, "basic") ? (
                   <ThisWeekTab session={session} syllabus={syllabus} onAttempt={handleAttempt} user={user} onUpgrade={handleUpgrade} onSettings={() => setShowSettings(true)} onUpdateTopics={() => setShowTopicUpdate(true)} />
@@ -6341,6 +6351,7 @@ export default function App() {
                   onAttempt={handleAttempt}
                   onUpgrade={handleUpgrade}
                   onSignup={() => setShowOnboarding(true)}
+                  allQuestions={activeBank}
                 />
               )}
 
@@ -6470,7 +6481,7 @@ export default function App() {
                 await ss("gm4_completed_sessions", null);
                 setSession(null);
                 setCompletedSessions([]);
-                const newSess = generateSession(user, records, QUESTION_BANK, null, []);
+                const newSess = generateSession(user, records, activeBank, null, []);
                 setSession(newSess);
                 await ss("gm4_session", newSess);
               }} style={{
