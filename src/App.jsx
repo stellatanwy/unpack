@@ -3811,7 +3811,7 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 40 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <div style={{ width: 28, height: 28, background: C.coral, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", color: C.deepBg, fontWeight: 900, fontSize: 14, fontFamily: "'Clash Display',sans-serif" }}>U</div>
-            <span style={{ fontWeight: 800, color: C.text, fontSize: 16, fontFamily: "'Clash Display',sans-serif" }}>Unpack</span>
+            <span style={{ fontWeight: 700, color: C.text, fontSize: 18, fontFamily: "'Fraunces', serif" }}>Unpack</span>
           </div>
           {onClose && (
             <button onClick={onClose} style={{ background: "none", border: "none", color: C.light, fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 5 }}>
