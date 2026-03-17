@@ -5965,6 +5965,12 @@ export default function App() {
     if (profileLoadedRef.current) return;
     profileLoadedRef.current = true;
 
+    // Fetch hidden question IDs first — must be resolved before session generation
+    const { data: hiddenRows } = await supabase.from("questions").select("id").eq("hidden", true);
+    const freshHiddenIds = new Set((hiddenRows || []).map(q => q.id));
+    if (freshHiddenIds.size) setHiddenQIds(freshHiddenIds);
+    const visibleBank = QUESTION_BANK.filter(q => !freshHiddenIds.has(q.id));
+
     const u = await sg("gm4_user");
     const r = await sg("gm4_records"); if (r) setRecords(r);
     const f = await sg("gm4_free"); if (typeof f === "number") setFreeCount(f);
@@ -6007,11 +6013,16 @@ export default function App() {
       const existingSess = await sg("gm4_session");
       const currentWeek = getWeekStart();
       if (!existingSess || existingSess.weekStart !== currentWeek) {
-        const newSess = generateSession({ ...effectiveUser, syllabus: effectiveSyl }, r || [], activeBank, existingSess, cs || []);
+        const newSess = generateSession({ ...effectiveUser, syllabus: effectiveSyl }, r || [], visibleBank, existingSess, cs || []);
         setSession(newSess);
         await ss("gm4_session", newSess);
       } else {
-        setSession(existingSess);
+        // Strip any hidden questions from the cached session
+        const filtered = freshHiddenIds.size
+          ? { ...existingSess, questions: existingSess.questions.filter(id => !freshHiddenIds.has(id)) }
+          : existingSess;
+        setSession(filtered);
+        if (filtered !== existingSess) await ss("gm4_session", filtered);
       }
       setPage("app");
     } else {
@@ -6028,12 +6039,6 @@ export default function App() {
     }
   }, []);
 
-  useEffect(() => {
-    // Fetch hidden question IDs from Supabase so they are excluded from student view
-    supabase.from("questions").select("id").eq("hidden", true).then(({ data }) => {
-      if (data?.length) setHiddenQIds(new Set(data.map(q => q.id)));
-    });
-  }, []);
 
   useEffect(() => {
     if (DEV_MODE) {
