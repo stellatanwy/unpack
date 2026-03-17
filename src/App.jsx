@@ -3514,12 +3514,12 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
         <div style={{ display: "flex", gap: 8 }}>
           {[
             { id: "free", label: "Free", price: "$0", features: ["3 curated questions", "Full feedback", "Unlimited resubmissions"], trial: null },
-            { id: "basic", label: "Basic", price: "$12.90/mo", features: ["Weekly sessions", "Progress dashboard", "7-day free trial"], trial: "7-day free trial — no card needed yet" },
-            { id: "plus", label: "Plus", price: "$15.90/mo", features: ["Everything in Basic", "+ Timed simulations", "7-day free trial"], trial: "7-day free trial — no card needed yet", popular: true },
+            { id: "basic", label: "Basic", price: "$12.90/mo", features: ["Weekly sessions", "Progress dashboard", "7-day free trial"], trial: "7-day free trial — no card needed yet", tag: "Most popular" },
+            { id: "plus", label: "Plus", price: "$15.90/mo", features: ["Everything in Basic", "+ Timed simulations", "7-day free trial"], trial: "7-day free trial — no card needed yet", tag: "For serious prep" },
           ].map(t => (
             <div key={t.id} onClick={() => setSelectedTier(t.id)}
               style={{ flex: 1, border: `2px solid ${selectedTier === t.id ? C.coral : C.border}`, borderRadius: 12, padding: "12px 10px", cursor: "pointer", background: selectedTier === t.id ? C.coralL : "#fff", position: "relative", transition: "border-color 0.15s, background 0.15s" }}>
-              {t.popular && <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", background: C.coral, color: C.deepBg, fontSize: 9, fontWeight: 700, borderRadius: 20, padding: "2px 8px", whiteSpace: "nowrap" }}>Most popular</div>}
+              {t.tag && <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", background: C.coral, color: C.deepBg, fontSize: 9, fontWeight: 700, borderRadius: 20, padding: "2px 8px", whiteSpace: "nowrap" }}>{t.tag}</div>}
               <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 2 }}>{t.label}</div>
               <div style={{ fontWeight: 700, fontSize: 12, color: C.coral, marginBottom: 8 }}>{t.price}</div>
               {t.features.map(f => <div key={f} style={{ fontSize: 11, color: C.mid, lineHeight: 1.6 }}>{f}</div>)}
@@ -5534,7 +5534,11 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
       {/* FULL PAPER SIMULATION */}
       <div style={{ marginTop: 4 }}>
         <div style={{ fontWeight: 700, fontSize: 11, color: C.light, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>Full Paper Simulation</div>
-        <PaperSimulation user={user} syllabus={syllabus} onAttempt={onAttempt} onUpgrade={onUpgrade} allQuestions={allQuestions} />
+        <div style={{ background: C.card, border: `1.5px solid ${C.border}`, borderRadius: 14, padding: "24px 22px", textAlign: "center" }}>
+          <div style={{ fontSize: 28, marginBottom: 10 }}>🛠</div>
+          <div style={{ fontFamily: "'Clash Display',sans-serif", fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 6 }}>Coming soon</div>
+          <div style={{ color: C.mid, fontSize: 13 }}>Full timed paper simulations are in the works. Check back soon.</div>
+        </div>
       </div>
     </div>
   );
@@ -5888,7 +5892,7 @@ const Landing = ({ onStart, onSignup }) => (
                   <span style={{ color: C.textOnDark, opacity: 0.75, fontSize: 13 }}>{f}</span>
                 </div>
               ))}
-              <button onClick={onStart} className="hl" style={{ width: "100%", marginTop: 20, background: p.highlight ? C.coral : "transparent", color: p.highlight ? C.deepBg : C.textOnDark, border: `1.5px solid ${p.highlight ? C.coral : C.borderOnDark}`, borderRadius: 8, padding: "11px 0", fontWeight: 700, fontSize: 13 }}>
+              <button onClick={p.name === "Free" ? onStart : onSignup} className="hl" style={{ width: "100%", marginTop: 20, background: p.highlight ? C.coral : "transparent", color: p.highlight ? C.deepBg : C.textOnDark, border: `1.5px solid ${p.highlight ? C.coral : C.borderOnDark}`, borderRadius: 8, padding: "11px 0", fontWeight: 700, fontSize: 13 }}>
                 {p.name === "Free" ? "Start free →" : "Start training →"}
               </button>
             </div>
