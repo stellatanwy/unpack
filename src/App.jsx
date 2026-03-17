@@ -3425,8 +3425,16 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
     // Skip signUp if already authenticated (e.g. resuming onboarding after session restore)
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
+      // Check beta slot limit
+      const { count, error: countErr } = await supabase.from("beta_signups").select("*", { count: "exact", head: true });
+      if (countErr) { setScreen1Error("Could not verify signup availability. Please try again."); setScreen1Loading(false); return; }
+      if (count >= 8) { setScreen1Error("Beta is currently full. Follow us for updates on when we open more spots."); setScreen1Loading(false); return; }
+
       const { error } = await supabase.auth.signUp({ email: data.email, password: data.password });
       if (error) { setScreen1Error(error.message); setScreen1Loading(false); return; }
+
+      // Record the signup slot
+      await supabase.from("beta_signups").insert({});
     }
     if (selectedTier === "free") {
       goNext({ password: "", tier: "free" });
