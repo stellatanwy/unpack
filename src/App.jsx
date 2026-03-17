@@ -3383,7 +3383,7 @@ const CustomQuestion = ({ onAttempt, syllabus, user }) => {
 
 // ─── AUTH MODAL ───────────────────────────────────────────────────────────────
 // ─── ONBOARDING ───────────────────────────────────────────────────────────────
-const Onboarding = ({ initialData, initialStep, onComplete, tier }) => {
+const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => {
   const blank = { name: "", email: "", password: "", year: null, syllabus: null, school: "", topicsCovered: [], examType: null };
   const [step, setStep] = useState(initialStep || 1);
   const [data, setData] = useState({ ...blank, ...initialData });
@@ -3747,9 +3747,16 @@ const Onboarding = ({ initialData, initialStep, onComplete, tier }) => {
   return (
     <div style={{ position: "fixed", inset: 0, background: C.bg, overflow: "auto", zIndex: 500 }}>
       <div style={{ maxWidth: 480, margin: "0 auto", padding: "48px 24px 60px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 40 }}>
-          <div style={{ width: 28, height: 28, background: C.coral, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", color: C.deepBg, fontWeight: 900, fontSize: 14, fontFamily: "'Clash Display',sans-serif" }}>U</div>
-          <span style={{ fontWeight: 800, color: C.text, fontSize: 16, fontFamily: "'Clash Display',sans-serif" }}>Unpack</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 40 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 28, height: 28, background: C.coral, borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center", color: C.deepBg, fontWeight: 900, fontSize: 14, fontFamily: "'Clash Display',sans-serif" }}>U</div>
+            <span style={{ fontWeight: 800, color: C.text, fontSize: 16, fontFamily: "'Clash Display',sans-serif" }}>Unpack</span>
+          </div>
+          {onClose && (
+            <button onClick={onClose} style={{ background: "none", border: "none", color: C.light, fontSize: 13, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 5 }}>
+              ← Back
+            </button>
+          )}
         </div>
         {step >= 2 && step <= 4 && ProgressBar()}
         {step === 1 && Screen1()}
@@ -6114,7 +6121,7 @@ export default function App() {
           <Landing onStart={() => { setPage("app"); setTab("thisweek"); }} onSignup={() => setShowOnboarding(true)} />
         </div>
         {auth && <AuthModal initMode={auth} onClose={() => setAuth(null)} />}
-        {showOnboarding && <Onboarding initialData={onboardingInitData} initialStep={onboardingInitStep} onComplete={handleOnboardingComplete} tier={user?.tier} />}
+        {showOnboarding && <Onboarding initialData={onboardingInitData} initialStep={onboardingInitStep} onComplete={handleOnboardingComplete} onClose={() => setShowOnboarding(false)} tier={user?.tier} />}
       </div></>
   );
 
