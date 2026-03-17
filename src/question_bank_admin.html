@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unpack — Question Bank Admin</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+    :root {
+      --bg: #0c0c0e;
+      --surface: #16161a;
+      --surface2: #1e1e24;
+      --surface3: #26262e;
+      --border: #2a2a34;
+      --border2: #34343f;
+      --text: #e2e2ee;
+      --text2: #9090b0;
+      --text3: #5a5a7a;
+      --accent: #6c5ce7;
+      --accent-soft: rgba(108, 92, 231, 0.15);
+      --green: #00b894;
+      --green-soft: rgba(0, 184, 148, 0.12);
+      --amber: #fdcb6e;
+      --amber-soft: rgba(253, 203, 110, 0.12);
+      --red: #e17055;
+      --red-soft: rgba(225, 112, 85, 0.12);
+      --blue: #74b9ff;
+      --blue-soft: rgba(116, 185, 255, 0.12);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      font-size: 13px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .logo {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .header-sep {
+      width: 1px;
+      height: 20px;
+      background: var(--border2);
+    }
+
+    .header-meta {
+      color: var(--text3);
+      font-size: 12px;
+    }
+
+    .conn-status {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text3);
+    }
+
+    .conn-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--text3);
+      transition: background 0.3s;
+    }
+
+    .conn-dot.live {
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+    }
+
+    .conn-dot.error {
+      background: var(--red);
+    }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 320px;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      padding: 7px 12px 7px 32px;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text3);
+      font-size: 13px;
+    }
+
+    select {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    select:focus {
+      border-color: var(--accent);
+    }
+
+    .toolbar-sep {
+      width: 1px;
+      height: 24px;
+      background: var(--border);
+      margin: 0 4px;
+    }
+
+    .save-all-btn {
+      margin-left: auto;
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 7px 16px;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .save-all-btn:hover {
+      opacity: 0.9;
+    }
+
+    .save-all-btn:active {
+      transform: scale(0.98);
+    }
+
+    .save-all-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      overflow-x: auto;
+    }
+
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-right: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .stat-pill:hover {
+      background: var(--surface2);
+    }
+
+    .stat-pill.active {
+      background: var(--surface2);
+    }
+
+    .stat-n {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .stat-label {
+      color: var(--text2);
+    }
+
+    /* ── TABLE ── */
+    .table-wrap {
+      overflow-x: auto;
+      padding-bottom: 80px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      background: var(--surface);
+      position: sticky;
+      top: 53px;
+      z-index: 10;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    thead th:hover {
+      color: var(--text2);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover {
+      background: var(--surface);
+    }
+
+    tbody tr.hidden-row {
+      opacity: 0.4;
+    }
+
+    tbody tr.dirty {
+      background: rgba(108, 92, 231, 0.05);
+    }
+
+    td {
+      padding: 10px 14px;
+      vertical-align: top;
+    }
+
+    .id-col {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--text3);
+      white-space: nowrap;
+      min-width: 140px;
+    }
+
+    .q-col {
+      min-width: 280px;
+      max-width: 360px;
+      line-height: 1.5;
+      color: var(--text);
+      font-size: 12px;
+    }
+
+    .q-col .topic-label {
+      display: block;
+      font-size: 10px;
+      color: var(--text3);
+      margin-bottom: 3px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-red {
+      background: var(--red-soft);
+      color: var(--red);
+    }
+
+    .badge-green {
+      background: var(--green-soft);
+      color: var(--green);
+    }
+
+    .badge-amber {
+      background: var(--amber-soft);
+      color: var(--amber);
+    }
+
+    .badge-blue {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .badge-dim {
+      background: var(--surface3);
+      color: var(--text3);
+    }
+
+    .skill-badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      background: var(--surface3);
+      color: var(--text2);
+      white-space: nowrap;
+    }
+
+    .marks-badge {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--accent);
+    }
+
+    /* ── SYLLABUS CHECKBOXES ── */
+    .syllabus-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 180px;
+    }
+
+    .syl-check {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 11px;
+      color: var(--text2);
+      padding: 2px 0;
+      transition: color 0.15s;
+    }
+
+    .syl-check:hover {
+      color: var(--text);
+    }
+
+    .syl-check input[type="checkbox"] {
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid var(--border2);
+      border-radius: 3px;
+      background: var(--bg);
+      cursor: pointer;
+      flex-shrink: 0;
+      position: relative;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .syl-check input[type="checkbox"]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .syl-check input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 1px;
+      width: 5px;
+      height: 8px;
+      border: 2px solid white;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    /* ── HIDE TOGGLE ── */
+    .hide-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .toggle-track {
+      width: 34px;
+      height: 18px;
+      border-radius: 9px;
+      background: var(--surface3);
+      border: 1px solid var(--border2);
+      position: relative;
+      transition: background 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .toggle-track.on {
+      background: var(--red-soft);
+      border-color: var(--red);
+    }
+
+    .toggle-thumb {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--text3);
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .toggle-track.on .toggle-thumb {
+      transform: translateX(16px);
+      background: var(--red);
+    }
+
+    .toggle-label {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    .toggle-track.on+.toggle-label {
+      color: var(--red);
+    }
+
+    /* ── FIGURE STATUS ── */
+    .fig-status-select {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 11px;
+      outline: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    /* ── SAVE INDICATOR ── */
+    .save-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: none;
+      flex-shrink: 0;
+    }
+
+    .dirty .save-dot {
+      display: inline-block;
+    }
+
+    /* ── TOAST ── */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 999;
+    }
+
+    .toast {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      font-size: 12px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: slideIn 0.2s ease;
+      min-width: 220px;
+    }
+
+    .toast.success {
+      border-color: var(--green);
+    }
+
+    .toast.error {
+      border-color: var(--red);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ── LOADING ── */
+    .loading-overlay {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px;
+      color: var(--text3);
+      font-size: 13px;
+      gap: 10px;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border2);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .empty-state {
+      padding: 60px;
+      text-align: center;
+      color: var(--text3);
+    }
+
+    /* ── PENDING COUNT ── */
+    .pending-badge {
+      background: var(--accent);
+      color: white;
+      border-radius: 10px;
+      padding: 1px 7px;
+      font-size: 11px;
+      font-weight: 700;
+      min-width: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">Un<span>pack</span></div>
+    <div class="header-sep"></div>
+    <div class="header-meta">Question Bank Admin</div>
+    <div class="conn-status">
+      <div class="conn-dot" id="conn-dot"></div>
+      <span id="conn-label">Connecting…</span>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search" placeholder="Search questions, topics…" oninput="renderTable()">
+    </div>
+    <select id="f-cluster" onchange="renderTable()">
+      <option value="">All clusters</option>
+    </select>
+    <select id="f-skill" onchange="renderTable()">
+      <option value="">All skills</option>
+    </select>
+    <select id="f-syllabus" onchange="renderTable()">
+      <option value="">All syllabuses</option>
+      <option value="O-Elective">O-Elective</option>
+      <option value="O-Pure">O-Pure</option>
+      <option value="N-Elective">N-Elective</option>
+      <option value="N-Pure">N-Pure</option>
+    </select>
+    <select id="f-hidden" onchange="renderTable()">
+      <option value="">All visibility</option>
+      <option value="visible">Visible only</option>
+      <option value="hidden">Hidden only</option>
+    </select>
+    <div class="toolbar-sep"></div>
+    <button class="save-all-btn" id="save-btn" onclick="saveAll()" disabled>
+      Save changes <span class="pending-badge" id="pending-count">0</span>
+    </button>
+  </div>
+
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-pill" onclick="filterStat('')" id="stat-all">
+      <span class="stat-n" id="cnt-total" style="color:var(--text)">—</span>
+      <span class="stat-label">total</span>
+    </div>
+    <div class="stat-pill" onclick="filterStat('hidden')">
+      <span class="stat-n" id="cnt-hidden" style="color:var(--red)">—</span>
+      <span class="stat-label">hidden</span>
+    </div>
+    <div class="stat-pill" onclick="filterStat('needs_image')">
+      <span class="stat-n" id="cnt-needs" style="color:var(--amber)">—</span>
+      <span class="stat-label">need images</span>
+    </div>
+    <div class="stat-pill" onclick="filterStat('no_syllabus')">
+      <span class="stat-n" id="cnt-nosyl" style="color:var(--blue)">—</span>
+      <span class="stat-label">no syllabus</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-n" id="cnt-dirty" style="color:var(--accent)">0</span>
+      <span class="stat-label">unsaved changes</span>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+      Loading questions from Supabase…
+    </div>
+  </div>
+
+  <div class="toast-container" id="toasts"></div>
+
+  <script>
+    // ── CONFIG ──
+    // Replace these with your actual env values or hardcode for standalone use
+    const SUPABASE_URL = 'https://judwlaenxahzwwvpozdw.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1ZHdsYWVueGFoend3dnBvemR3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1NTgwNjAsImV4cCI6MjA4OTEzNDA2MH0.mjO1b3GgVn0oQr7mK7KYjgPbLszrqAP0_iptBj3AAuY';
+
+    const { createClient } = supabase;
+    const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const SYLLABUSES = ['O-Elective', 'O-Pure', 'N-Elective', 'N-Pure'];
+
+    // ── STATE ──
+    let allQuestions = [];
+    let dirty = {}; // { id: { field: value } }
+    let statFilter = '';
+
+    // ── INIT ──
+    async function init() {
+      const { data, error } = await db.from('questions').select('*').order('id');
+      if (error) {
+        setConn(false);
+        document.getElementById('main-content').innerHTML =
+          `<div class="loading-overlay" style="color:var(--red)">⚠ Could not load questions: ${error.message}</div>`;
+        return;
+      }
+      setConn(true);
+      allQuestions = data;
+      populateFilters();
+      renderTable();
+      updateStats();
+    }
+
+    function setConn(ok) {
+      const dot = document.getElementById('conn-dot');
+      const label = document.getElementById('conn-label');
+      dot.className = 'conn-dot ' + (ok ? 'live' : 'error');
+      label.textContent = ok ? 'Live' : 'Connection error';
+    }
+
+    // ── FILTERS ──
+    function populateFilters() {
+      const clusters = [...new Set(allQuestions.map(q => q.cluster).filter(Boolean))].sort();
+      const skills = [...new Set(allQuestions.map(q => q.skill).filter(Boolean))].sort();
+
+      const cf = document.getElementById('f-cluster');
+      clusters.forEach(c => {
+        const o = document.createElement('option');
+        o.value = c; o.textContent = c;
+        cf.appendChild(o);
+      });
+
+      const sf = document.getElementById('f-skill');
+      skills.forEach(s => {
+        const o = document.createElement('option');
+        o.value = s; o.textContent = s;
+        sf.appendChild(o);
+      });
+    }
+
+    function filterStat(key) {
+      statFilter = statFilter === key ? '' : key;
+      document.querySelectorAll('.stat-pill').forEach(p => p.classList.remove('active'));
+      if (key) {
+        event.currentTarget.classList.add('active');
+      }
+      renderTable();
+    }
+
+    function getFiltered() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const fCluster = document.getElementById('f-cluster').value;
+      const fSkill = document.getElementById('f-skill').value;
+      const fSyllabus = document.getElementById('f-syllabus').value;
+      const fHidden = document.getElementById('f-hidden').value;
+
+      return allQuestions.filter(q => {
+        const current = { ...q, ...dirty[q.id] };
+
+        if (statFilter === 'hidden' && !current.hidden) return false;
+        if (statFilter === 'needs_image' && current.figure_type !== 'none' && current.figure_description) return false;
+        if (statFilter === 'no_syllabus' && current.syllabus) return false;
+
+        if (fCluster && q.cluster !== fCluster) return false;
+        if (fSkill && q.skill !== fSkill) return false;
+        if (fSyllabus && !(current.syllabus || '').includes(fSyllabus)) return false;
+        if (fHidden === 'visible' && current.hidden) return false;
+        if (fHidden === 'hidden' && !current.hidden) return false;
+
+        if (search) {
+          const hay = [q.id, q.question, q.topic, q.cluster, q.figure_description].join(' ').toLowerCase();
+          if (!hay.includes(search)) return false;
+        }
+        return true;
+      });
+    }
+
+    // ── RENDER ──
+    function renderTable() {
+      const rows = getFiltered();
+      const content = document.getElementById('main-content');
+
+      if (!rows.length) {
+        content.innerHTML = '<div class="empty-state">No questions match your filters.</div>';
+        return;
+      }
+
+      const isDirtyRow = id => dirty[id] && Object.keys(dirty[id]).length > 0;
+
+      const html = `
+    <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40px"></th>
+          <th>ID</th>
+          <th>Question / Topic</th>
+          <th>Skill</th>
+          <th>Marks</th>
+          <th>Syllabus</th>
+          <th>Figure needed?</th>
+          <th>Hide</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows.map(q => renderRow(q)).join('')}
+      </tbody>
+    </table>
+    </div>`;
+
+      content.innerHTML = html;
+      updateStats();
+    }
+
+    function renderRow(q) {
+      const current = { ...q, ...dirty[q.id] };
+      const isDirty = dirty[q.id] && Object.keys(dirty[q.id]).length > 0;
+      const isHidden = current.hidden;
+
+      // Parse syllabus tags
+      const activeSyls = (current.syllabus || '').split(' | ').map(s => s.trim()).filter(Boolean);
+
+      // Figure status — everything needs an image now
+      const needsImage = !!(q.figure_description || q.figure_caption || q.context ||
+        (q.question && q.question.toLowerCase().includes('fig')));
+      const figStatus = current.figure_type === 'uploaded' ? 'uploaded' :
+        needsImage ? 'needs_image' : 'none';
+
+      const figBadge = figStatus === 'uploaded'
+        ? `<span class="badge badge-green">✓ Uploaded</span>`
+        : figStatus === 'needs_image'
+          ? `<span class="badge badge-amber">⚠ Needs image</span>`
+          : `<span class="badge badge-dim">No figure</span>`;
+
+      return `<tr class="${isHidden ? 'hidden-row' : ''} ${isDirty ? 'dirty' : ''}" id="row-${q.id}">
+    <td style="width:40px;text-align:center">
+      <div class="save-dot" title="Unsaved changes"></div>
+    </td>
+    <td class="id-col">${q.id}</td>
+    <td class="q-col">
+      <span class="topic-label">${q.cluster} · ${q.topic || ''}</span>
+      ${q.question.length > 100 ? q.question.slice(0, 100) + '…' : q.question}
+    </td>
+    <td><span class="skill-badge">${q.skill || '—'}</span></td>
+    <td class="marks-badge">${q.marks}m</td>
+    <td>
+      <div class="syllabus-grid">
+        ${SYLLABUSES.map(syl => `
+          <label class="syl-check">
+            <input type="checkbox"
+              ${activeSyls.includes(syl) ? 'checked' : ''}
+              onchange="updateSyllabus('${q.id}', '${syl}', this.checked)"
+            >
+            ${syl}
+          </label>
+        `).join('')}
+      </div>
+    </td>
+    <td>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${figBadge}
+        <select class="fig-status-select" onchange="updateField('${q.id}', 'figure_type', this.value)">
+          <option value="none" ${current.figure_type === 'none' ? 'selected' : ''}>No figure</option>
+          <option value="needs_image" ${current.figure_type === 'needs_image' || (figStatus === 'needs_image' && current.figure_type !== 'uploaded') ? 'selected' : ''}>Needs image</option>
+          <option value="uploaded" ${current.figure_type === 'uploaded' ? 'selected' : ''}>Uploaded ✓</option>
+        </select>
+      </div>
+    </td>
+    <td>
+      <div class="hide-toggle" onclick="toggleHidden('${q.id}')">
+        <div class="toggle-track ${isHidden ? 'on' : ''}" id="toggle-${q.id}">
+          <div class="toggle-thumb"></div>
+        </div>
+        <span class="toggle-label">${isHidden ? 'Hidden' : 'Visible'}</span>
+      </div>
+    </td>
+  </tr>`;
+    }
+
+    // ── MUTATIONS ──
+    function updateSyllabus(id, syl, checked) {
+      const current = { ...allQuestions.find(q => q.id === id), ...dirty[id] };
+      let syls = (current.syllabus || '').split(' | ').map(s => s.trim()).filter(Boolean);
+
+      if (checked && !syls.includes(syl)) syls.push(syl);
+      if (!checked) syls = syls.filter(s => s !== syl);
+
+      // Sort in canonical order
+      const order = ['O-Elective', 'O-Pure', 'N-Elective', 'N-Pure'];
+      syls.sort((a, b) => order.indexOf(a) - order.indexOf(b));
+
+      markDirty(id, 'syllabus', syls.join(' | '));
+    }
+
+    function updateField(id, field, value) {
+      markDirty(id, field, value);
+    }
+
+    function toggleHidden(id) {
+      const current = { ...allQuestions.find(q => q.id === id), ...dirty[id] };
+      const newVal = !current.hidden;
+      markDirty(id, 'hidden', newVal);
+
+      // Update toggle visually without full re-render
+      const track = document.getElementById(`toggle-${id}`);
+      if (track) {
+        track.className = `toggle-track ${newVal ? 'on' : ''}`;
+        track.nextElementSibling.textContent = newVal ? 'Hidden' : 'Visible';
+      }
+
+      const row = document.getElementById(`row-${id}`);
+      if (row) {
+        row.classList.toggle('hidden-row', newVal);
+        row.classList.add('dirty');
+        row.querySelector('.save-dot').style.display = 'inline-block';
+      }
+    }
+
+    function markDirty(id, field, value) {
+      if (!dirty[id]) dirty[id] = {};
+      dirty[id][field] = value;
+      updatePendingCount();
+
+      const row = document.getElementById(`row-${id}`);
+      if (row) {
+        row.classList.add('dirty');
+        row.querySelector('.save-dot').style.display = 'inline-block';
+      }
+    }
+
+    function updatePendingCount() {
+      const n = Object.keys(dirty).length;
+      document.getElementById('pending-count').textContent = n;
+      document.getElementById('cnt-dirty').textContent = n;
+      document.getElementById('save-btn').disabled = n === 0;
+    }
+
+    // ── SAVE ──
+    async function saveAll() {
+      const btn = document.getElementById('save-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner" style="width:12px;height:12px;border-width:1.5px"></div> Saving…';
+
+      const ids = Object.keys(dirty);
+      let saved = 0, failed = 0;
+
+      for (const id of ids) {
+        const { error } = await db.from('questions').update(dirty[id]).eq('id', id);
+        if (error) {
+          failed++;
+          toast(`Failed to save ${id}: ${error.message}`, 'error');
+        } else {
+          // Merge into allQuestions
+          const idx = allQuestions.findIndex(q => q.id === id);
+          if (idx !== -1) allQuestions[idx] = { ...allQuestions[idx], ...dirty[id] };
+          delete dirty[id];
+          saved++;
+
+          const row = document.getElementById(`row-${id}`);
+          if (row) {
+            row.classList.remove('dirty');
+            row.querySelector('.save-dot').style.display = 'none';
+          }
+        }
+      }
+
+      updatePendingCount();
+      updateStats();
+
+      btn.innerHTML = `Save changes <span class="pending-badge" id="pending-count">0</span>`;
+      btn.disabled = true;
+
+      if (saved > 0) toast(`${saved} question${saved > 1 ? 's' : ''} saved`, 'success');
+      if (failed > 0) toast(`${failed} failed — check console`, 'error');
+    }
+
+    // ── STATS ──
+    function updateStats() {
+      const withDirty = allQuestions.map(q => ({ ...q, ...dirty[q.id] }));
+      document.getElementById('cnt-total').textContent = allQuestions.length;
+      document.getElementById('cnt-hidden').textContent = withDirty.filter(q => q.hidden).length;
+
+      const needsImg = withDirty.filter(q => {
+        const hasRef = q.figure_description || q.figure_caption ||
+          (q.question && q.question.toLowerCase().includes('fig'));
+        return hasRef && q.figure_type !== 'uploaded';
+      });
+      document.getElementById('cnt-needs').textContent = needsImg.length;
+      document.getElementById('cnt-nosyl').textContent = withDirty.filter(q => !q.syllabus).length;
+    }
+
+    // ── TOAST ──
+    function toast(msg, type = 'success') {
+      const container = document.getElementById('toasts');
+      const el = document.createElement('div');
+      el.className = `toast ${type}`;
+      el.innerHTML = `<span>${type === 'success' ? '✓' : '⚠'}</span> ${msg}`;
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }
+
+    // ── START ──
+    init();
+  </script>
+</body>
+
+</html>

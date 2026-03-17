@@ -1,0 +1,95 @@
+/* ─── Design tokens ────────────────────────────────────────────────────────── */
+:root {
+  --green-deep:    #0d2b1f;
+  --green-mid:     #1a4332;
+  --cream:         #f5f0e8;
+  --cream-dark:    #e8e0d0;
+  --electric:      #b8f000;
+  --electric-dim:  #8ab800;
+  --text-dark:     #0d2b1f;
+  --text-light:    #f5f0e8;
+  --text-muted:    #6b7c6e;
+  --red:           #e05c3a;
+  --amber:         #f0a500;
+  --border-cream:  #d8d0c0;
+  --border-green:  #2a5040;
+}
+
+/* ─── Base reset ───────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--cream);
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+}
+
+textarea, input, select, button {
+  font-family: 'DM Sans', sans-serif;
+}
+
+textarea:focus, input:focus, select:focus {
+  outline: 2px solid var(--electric) !important;
+  outline-offset: 1px;
+}
+
+h1, h2, h3 {
+  font-family: 'Fraunces', serif;
+}
+
+/* ─── Utility classes ──────────────────────────────────────────────────────── */
+.hl {
+  transition: opacity 0.15s, transform 0.15s;
+  cursor: pointer;
+}
+.hl:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+.fade {
+  animation: fadeUp 0.35s ease both;
+}
+
+/* ─── Animations ───────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}
+
+@keyframes checkPop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  70%  { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ─── Responsive layout ────────────────────────────────────────────────────── */
+.question-panels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 760px) {
+  .question-panels {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* ─── Scrollbar ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--cream-dark); }
+::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 3px; }
