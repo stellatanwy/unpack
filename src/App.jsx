@@ -3851,7 +3851,7 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
 };
 
 // ─── AUTH MODAL ───────────────────────────────────────────────────────────────
-const AuthModal = ({ initMode, onClose }) => {
+const AuthModal = ({ initMode, onClose, onSignup }) => {
   const [mode, setMode] = useState(initMode);
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
@@ -3910,7 +3910,10 @@ const AuthModal = ({ initMode, onClose }) => {
         <div style={{ textAlign: "center", marginTop: 14, color: C.light, fontSize: 13 }}>
           {mode === "signup" ? "Have an account? " : "New here? "}
           <span style={{ color: C.green, cursor: "pointer", fontWeight: 600 }}
-            onClick={() => { setMode(mode === "signup" ? "signin" : "signup"); setError(null); }}>
+            onClick={() => {
+              if (mode === "signin" && onSignup) { onClose(); onSignup(); }
+              else { setMode(mode === "signup" ? "signin" : "signup"); setError(null); }
+            }}>
             {mode === "signup" ? "Sign in" : "Sign up free"}
           </span>
         </div>
@@ -6243,7 +6246,7 @@ export default function App() {
         <div style={{ paddingTop: 60 }}>
           <Landing onStart={() => { setPage("app"); setTab("thisweek"); }} onSignup={() => setShowOnboarding(true)} />
         </div>
-        {auth && <AuthModal initMode={auth} onClose={() => setAuth(null)} />}
+        {auth && <AuthModal initMode={auth} onClose={() => setAuth(null)} onSignup={() => { setAuth(null); setShowOnboarding(true); }} />}
         {showOnboarding && <Onboarding initialData={onboardingInitData} initialStep={onboardingInitStep} onComplete={handleOnboardingComplete} onClose={() => setShowOnboarding(false)} tier={user?.tier} />}
       </div></>
   );
