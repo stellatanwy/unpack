@@ -3515,7 +3515,7 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
           {[
             { id: "free", label: "Free", price: "$0", features: ["3 curated questions", "Full feedback", "Unlimited resubmissions"], trial: null },
             { id: "basic", label: "Basic", price: "$12.90/mo", features: ["Weekly sessions", "Progress dashboard", "7-day free trial"], trial: "7-day free trial — no card needed yet", tag: "Most popular" },
-            { id: "plus", label: "Plus", price: "$15.90/mo", features: ["Everything in Basic", "+ Timed simulations", "7-day free trial"], trial: "7-day free trial — no card needed yet", tag: "For serious prep" },
+            { id: "plus", label: "Plus", price: "$15.90/mo", features: ["Everything in Basic", "+ Custom question diagnostics", "7-day free trial"], trial: "7-day free trial — no card needed yet", tag: "For serious prep" },
           ].map(t => (
             <div key={t.id} onClick={() => setSelectedTier(t.id)}
               style={{ flex: 1, border: `2px solid ${selectedTier === t.id ? C.coral : C.border}`, borderRadius: 12, padding: "12px 10px", cursor: "pointer", background: selectedTier === t.id ? C.coralL : "#fff", position: "relative", transition: "border-color 0.15s, background 0.15s" }}>
@@ -5867,13 +5867,13 @@ const Landing = ({ onStart, onSignup }) => (
               name: "Basic", price: "$12.90", period: "/month",
               highlight: false,
               tag: "Most popular",
-              features: ["Everything in Free", "Bonus questions", "Weekly curated sessions", "Progress dashboard", "More sessions near exam"]
+              features: ["Everything in Free", "Weekly curated sessions", "Bonus additional practice", "Progress dashboard", "More sessions near exam"]
             },
             {
               name: "Plus", price: "$15.90", period: "/month",
               highlight: true,
               tag: "For serious prep",
-              features: ["Everything in Basic", "Timed simulations", "Custom question diagnostics"]
+              features: ["Everything in Basic", "Custom question diagnostics", "Full paper simulation (coming soon!)"]
             },
           ].map(p => (
             <div key={p.name} style={{ background: C.green, border: `2px solid ${p.highlight ? C.coral : C.borderOnDark}`, borderRadius: 12, padding: "26px 22px", position: "relative" }}>
