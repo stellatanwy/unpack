@@ -5,7 +5,7 @@ import { callClaude, callClaudeWithImage } from "./lib/ai.js";
 // ─── DEV MODE ─────────────────────────────────────────────────────────────────
 // Set to true for local testing only. NEVER commit or deploy with DEV_MODE = true.
 // Switch between mock users using the floating panel (bottom-right corner).
-const DEV_MODE = true; // NEVER deploy with DEV_MODE = true
+const DEV_MODE = false; // NEVER deploy with DEV_MODE = true
 
 const DEV_USERS = [
   {
