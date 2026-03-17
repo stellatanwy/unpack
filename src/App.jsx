@@ -5787,7 +5787,7 @@ const Landing = ({ onStart, onSignup }) => (
           {/* connecting line */}
           <div style={{ position: "absolute", top: 28, left: "16.66%", right: "16.66%", height: 1, background: C.border, zIndex: 0 }} />
           {[
-            { icon: "✍", title: "Paste your answer", desc: "Write your Geography exam answer. Any question type — Explain, Describe, Evaluate, Compare." },
+            { icon: "✍", title: "Attempt a question", desc: "Write your Geography exam answer. Any question type — Explain, Describe, Evaluate, Compare." },
             { icon: "◎", title: "Get diagnosed", desc: "Unpack finds the exact reasoning gap holding your marks back. One gap at a time, in plain language." },
             { icon: "↑", title: "Fix your thinking", desc: "Revise your answer. Resubmit. Track how your reasoning improves across the session." },
           ].map((s, i) => (
@@ -5832,7 +5832,7 @@ const Landing = ({ onStart, onSignup }) => (
     <section style={{ background: C.bg, padding: "80px 24px" }}>
       <div style={{ maxWidth: 860, margin: "0 auto" }}>
         <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, color: C.text, marginBottom: 12 }}>Built for Singapore Geography</h2>
-        <p style={{ color: C.light, fontSize: 15, marginBottom: 36, lineHeight: 1.6 }}>Calibrated to MOE LORM marking criteria.</p>
+        <p style={{ color: C.light, fontSize: 15, marginBottom: 36, lineHeight: 1.6 }}>Calibrated to MOE marking criteria.</p>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
           {["O-Level Elective", "O-Level Pure", "N(A)-Level Elective", "N(A)-Level Pure"].map(s => (
             <div key={s} style={{ border: `1.5px solid ${C.border}`, borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 600, color: C.text, background: C.card }}>
@@ -5860,13 +5860,13 @@ const Landing = ({ onStart, onSignup }) => (
               name: "Basic", price: "$12.90", period: "/month",
               highlight: false,
               tag: "Most popular",
-              features: ["Everything in Free", "Full question bank", "Weekly curated sessions", "Progress dashboard", "More sessions near exam"]
+              features: ["Everything in Free", "Bonus questions", "Weekly curated sessions", "Progress dashboard", "More sessions near exam"]
             },
             {
               name: "Plus", price: "$15.90", period: "/month",
               highlight: true,
               tag: "For serious prep",
-              features: ["Everything in Basic", "Your own school's questions", "Custom question diagnostics", "Priority bank updates"]
+              features: ["Everything in Basic", "Timed simulations", "Custom question diagnostics"]
             },
           ].map(p => (
             <div key={p.name} style={{ background: C.green, border: `2px solid ${p.highlight ? C.coral : C.borderOnDark}`, borderRadius: 12, padding: "26px 22px", position: "relative" }}>
