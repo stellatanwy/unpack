@@ -1984,6 +1984,28 @@ Output nothing before it. No reasoning, no notes, no evaluation summary, no JSON
 The evaluation is already complete — you are writing prose only.
 Everything after ---FEEDBACK--- is shown directly to the student.
 
+CALIBRATION RULES FOR 9-MARK EVALUATE QUESTIONS:
+
+Rule E1 — Conclusion quality (L2 ceiling without clear stand)
+A conclusion that says "both factors are important" or equivalent without specifying which is MORE important using a geographical concept scores L2 maximum.
+To reach L3, the conclusion must:
+- Take a clear stand on which factor is more important
+- Justify using at least one geographical concept: time scale (short-term vs long-term), scale of influence (individual vs national vs global), or place context (developing vs developed country)
+If the conclusion is present but vague — flag this as the primary gap when the student is otherwise at L2.
+Feedback nudge: "You've said both factors matter — but which one matters more, and why? Think about [time scale / scale of impact / who is most affected]."
+
+Rule E2 — Example quality (specific and logically linked)
+An example must be logically linked to the specific impact being discussed.
+A place name with a generic description fails — it must answer: when did this happen, how severe was it, and how does it directly demonstrate the specific point made — not a related but different point.
+Flag if: the example names a place but describes a different impact from the one being argued, or if the example is so generic it could apply to any geography answer.
+Feedback nudge: "Your example mentions [place] — but does it actually show [the specific impact you're arguing]? What happened there, how bad was it, and how does that prove your point?"
+
+Rule E3 — Depth over breadth (single-factor questions)
+For questions that ask about one specific factor, reward deep elaboration of one specific impact per factor.
+Do not penalise the student for not covering multiple impacts within the same factor — one well-developed impact chain is sufficient for L3.
+Flag if the student switches impact type mid-paragraph without developing either fully.
+Feedback nudge: "You've started two different points here — [point A] and [point B]. Pick one and develop it all the way: what happens, how severe, what's the outcome?"
+
 HARD RULES:
 - Never rewrite the student's answer
 - Never give the correct answer
