@@ -4369,7 +4369,7 @@ const QuestionScreen = ({ q, qIdx, total, sessionQs, sessionCompleted, onAttempt
 };
 
 // ─── THIS WEEK TAB ─────────────────────────────────────────────────────────────
-const ThisWeekTab = ({ session, syllabus, onAttempt, user, onUpgrade, onSettings, onUpdateTopics }) => {
+const ThisWeekTab = ({ session, syllabus, onAttempt, user, onUpgrade, onSettings, onUpdateTopics, onFinish }) => {
   const [activeIdx, setActiveIdx] = useState(0);
 
   const examDate = user?.examDate ? new Date(user.examDate) : null;
@@ -4407,8 +4407,9 @@ const ThisWeekTab = ({ session, syllabus, onAttempt, user, onUpgrade, onSettings
     const nextIdx = activeIdx + 1;
     if (nextIdx < total) {
       setActiveIdx(nextIdx);
+    } else {
+      onFinish?.();
     }
-    // Session completion is triggered by onAttempt in App.jsx when all questions are attempted
   };
 
   const currentQ = sessionQs[activeIdx];
@@ -6341,7 +6342,7 @@ export default function App() {
                     allQuestions={activeBank}
                   />
                 ) : canAccess(tier, "basic") ? (
-                  <ThisWeekTab session={session} syllabus={syllabus} onAttempt={handleAttempt} user={user} onUpgrade={handleUpgrade} onSettings={() => setShowSettings(true)} onUpdateTopics={() => setShowTopicUpdate(true)} />
+                  <ThisWeekTab session={session} syllabus={syllabus} onAttempt={handleAttempt} user={user} onUpgrade={handleUpgrade} onSettings={() => setShowSettings(true)} onUpdateTopics={() => setShowTopicUpdate(true)} onFinish={() => setTab("dashboard")} />
                 ) : (
                   <UpgradePrompt reason="Upgrade to Basic to access weekly sessions" onSignup={() => setShowOnboarding(true)} onUpgrade={handleUpgrade} userTier={tier} />
                 )
