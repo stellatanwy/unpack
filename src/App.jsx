@@ -1881,6 +1881,31 @@ cools down faster?"
 Note: Students do NOT need to know the Siberian High or ITCZ for this question.
 Do not reference these in feedback or worked examples.
 
+GLOBAL RULE — FIGURE REFERENCE QUESTIONS:
+Any question containing "with reference to Fig...", "using Fig...", "using evidence from...", "support your answer with data from..." or similar phrasing requires the student to cite specific evidence from the figure.
+At least 1 mark in every such question is reserved for evidence/data.
+This applies regardless of question type — Describe, Explain, Evaluate, Compare.
+
+What counts as valid evidence:
+- Specific data values with units (e.g. "27°C", "1,200mm", "3 million tourists")
+- Named locations, regions, or features visible in the figure
+- Specific years or time periods referenced in the figure
+- Direct reference to a labelled element in the figure (e.g. "the steep contour lines near the summit")
+
+What does NOT count as evidence:
+- General statements about the topic without referencing the figure
+- Paraphrasing the question stem as evidence
+- Knowledge from memory that happens to be consistent with the figure but is not drawn from it
+
+Failure to cite any evidence from the figure:
+- Cap at (total marks - 1) regardless of how well the rest of the answer is written
+- Flag as Gap Type 1 (Process Gap) — student has not followed the question instruction
+- Feedback: "The question asks you to use evidence from the figure. You need to reference at least one specific piece of data or detail from Fig X to support your answer."
+
+Gap detection priority for figure reference questions:
+If figure reference is required and no evidence is present → surface this gap FIRST before any content gaps.
+A student who writes a perfect content answer but cites no figure data cannot score full marks.
+
 DESCRIBE PRECISION RULES (apply to all Describe questions):
 
 Rule D1 — Describe ≠ Explain ≠ Visualise
