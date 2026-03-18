@@ -1993,6 +1993,74 @@ Worked example — failed Mark 2:
 "The temperature range is about 3°C."
 → range value present but not characterised as small/big, no months cited = 0 marks
 
+DESCRIBE A TREND QUESTIONS:
+Typically [4m]. If more marks available, additional trend/anomaly/subtrend + data required per extra mark pair.
+Mark structure — 1 mark per complete point:
+
+Mark 1 — General trend
+Compare FIRST data point to LAST data point only.
+Three valid answers only: increase / decrease / no change.
+"Increase then decrease" and "decrease then increase" are NEVER valid — these are the most common student errors.
+What happens between first and last point is irrelevant for Mark 1.
+If last value > first value → increase
+If last value < first value → decrease
+If last value ≈ first value → no change
+FAIL if: student describes the shape of the graph ("goes up then comes down") instead of the overall direction
+
+Mark 2 — Data for general trend
+Must cite: value at first data point + value at last data point
+Must include: units and time reference
+Example: "from 5 million tourists in 2009 to 11 million in 2019"
+FAIL if: only one end point cited, or data has no units, or no time reference
+
+Mark 3 — Anomaly OR subtrend OR fluctuation
+Option A — Anomaly:
+A single data point that goes against the general trend.
+Example: "except in 2008 where there was a slight decrease"
+Must be a single aberrant point — not a sustained change in direction.
+Option B — Subtrend:
+Different rates of change within the same direction as the general trend.
+Example: "increasing gradually from 2009 to 2014, then increasing more rapidly from 2014 to 2019"
+Must identify at least two distinct phases with clearly different rates.
+IMPORTANT: subtrend must follow the SAME direction as the general trend — it is about rate, not direction.
+Option C — Fluctuation:
+Alternating increases and decreases across at least 4 consecutive data points.
+Example: "fluctuating between 2005 and 2015, alternating between increases and decreases"
+Minimum 4 alternating points required (up, down, up, down).
+FAIL if: only 2 alternating points — does not qualify as fluctuation.
+FAIL if: student repeats the general trend in different words.
+FAIL if: student describes "increase then decrease" as a subtrend — a change in direction is NOT a subtrend.
+
+Mark 4 — Data for Mark 3
+Must cite specific values and time references supporting whatever was identified in Mark 3.
+Anomaly: cite the anomalous value and year.
+Subtrend: cite data for each phase (e.g. "from 5m in 2009 to 6m in 2014, then rising to 11m by 2019").
+Fluctuation: cite at least two alternating values with years.
+FAIL if: Mark 3 point made without any supporting data — data is always required.
+
+If question is worth more than 4m: each additional mark pair = one new anomaly/subtrend/fluctuation + supporting data, or one additional variable/line if graph shows multiple lines.
+
+Common student errors — flag these explicitly:
+"The trend increases then decreases" → wrong general trend → redirect: "Look only at the first and last data point. Is the last value higher or lower than the first?"
+Describing the middle of the graph as the general trend → same redirect.
+Citing data without units or time reference → G3 precision gap.
+Calling two alternating points a fluctuation → redirect: minimum 4 alternating points required.
+Making a Mark 3 point without data → always flag — Mark 4 is required.
+Subtrend that changes direction → not a subtrend → redirect: subtrend is about rate, not direction.
+
+Gap detection priority:
+1. General trend wrong or missing → surface first, before anything else
+2. No data for general trend → surface second
+3. No Mark 3 point → surface third
+4. Mark 3 point present but no data → surface fourth
+
+Worked example — full 4/4:
+"Tourist arrivals to Taiwan generally increased from 2009 to 2019 [M1], rising from 4 million to 11 million [M2]. However, the rate of increase was not consistent — arrivals grew gradually from 2009 to 2014, then increased more rapidly from 2014 to 2019 [M3], rising from 6 million in 2014 to 11 million in 2019 [M4]."
+
+Worked example — failed Mark 1:
+"Tourist arrivals increased then decreased then increased again."
+→ Wrong. Look only at first and last point. If last value is higher than first → general trend is increase. The fluctuations in between belong in Mark 3.
+
 EVALUATION IS AUTHORITATIVE:
 The EVALUATION JSON provided at the end of the user message is the final marking result.
 Do NOT recalculate marks. Do NOT re-evaluate. Do NOT override marksAwarded.
