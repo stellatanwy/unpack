@@ -5252,6 +5252,16 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
     );
   }
 
+  // Derive covered clusters from user's topicsCovered
+  const coveredClusters = (() => {
+    const tc = user?.topicsCovered;
+    if (!tc || tc === "all" || (Array.isArray(tc) && tc.length === 0)) return null;
+    return Object.entries(ONBOARDING_TOPICS)
+      .filter(([, topics]) => topics.some(t => tc.includes(t.id)))
+      .map(([cluster]) => cluster);
+  })();
+  const inCoveredCluster = (q) => !coveredClusters || coveredClusters.includes(q.cluster);
+
   // Bonus questions logic
   const sessionComplete = currentSession?.questions?.every(qId => currentSession?.completed?.includes(qId));
   const bonusQuestions = useMemo(() => {
@@ -5263,19 +5273,21 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
       !q.figureRequired &&
       !sessionIds.has(q.id) &&
       !recentIds.has(q.id) &&
-      q.tier === "paid"
+      q.tier === "paid" &&
+      inCoveredCluster(q)
     );
     // Deterministic shuffle seeded on weekStart so bonus questions stay stable across tab switches
     const seed = currentSession?.weekStart || "default";
     const seeded = (id) => { let h = 0; for (const c of seed + id) h = Math.imul(31, h) + c.charCodeAt(0) | 0; return h >>> 0; };
     return pool.sort((a, b) => seeded(a.id) - seeded(b.id)).slice(0, 3);
-  }, [sessionComplete, records, currentSession, user.syllabus, allQuestions]);
+  }, [sessionComplete, records, currentSession, user.syllabus, allQuestions, coveredClusters]);
 
   // Timed question selection
   const selectTimedQuestion = () => {
     const pool = allQuestions.filter(q => {
       if (!q.syllabus.includes(user.syllabus)) return false;
       if (q.figureRequired) return false;
+      if (!inCoveredCluster(q)) return false;
       if (timedConfig.skill && q.skill !== timedConfig.skill) return false;
       if (timedConfig.marks && q.marks !== timedConfig.marks) return false;
       return true;
