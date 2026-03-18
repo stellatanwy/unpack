@@ -5265,7 +5265,10 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
       !recentIds.has(q.id) &&
       q.tier === "paid"
     );
-    return pool.sort(() => Math.random() - 0.5).slice(0, 3);
+    // Deterministic shuffle seeded on weekStart so bonus questions stay stable across tab switches
+    const seed = currentSession?.weekStart || "default";
+    const seeded = (id) => { let h = 0; for (const c of seed + id) h = Math.imul(31, h) + c.charCodeAt(0) | 0; return h >>> 0; };
+    return pool.sort((a, b) => seeded(a.id) - seeded(b.id)).slice(0, 3);
   }, [sessionComplete, records, currentSession, user.syllabus, allQuestions]);
 
   // Timed question selection
