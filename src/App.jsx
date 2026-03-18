@@ -5332,15 +5332,22 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
   if (practiceMode === "bonus" && selectedBonusQ) {
     return (
       <div>
-        <QuestionCard
+        <button onClick={() => { setSelectedBonusQ(null); setPracticeMode(null); }}
+          style={{ background: "none", border: "none", color: C.light, fontSize: 13, cursor: "pointer", padding: "4px 0 12px", display: "block" }}>
+          ← Back to Practice
+        </button>
+        <QuestionScreen
           q={selectedBonusQ}
+          qIdx={0}
+          total={1}
+          sessionQs={[selectedBonusQ]}
+          sessionCompleted={[]}
           onAttempt={onAttempt}
+          onMoveOn={() => { setSelectedBonusQ(null); setPracticeMode(null); }}
           canSubmit={true}
           onUpgrade={onUpgrade}
           syllabus={syllabus}
           user={user}
-          bonusMode={true}
-          onBack={() => { setSelectedBonusQ(null); setPracticeMode(null); }}
         />
       </div>
     );
