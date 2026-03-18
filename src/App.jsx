@@ -2061,6 +2061,58 @@ Worked example — failed Mark 1:
 "Tourist arrivals increased then decreased then increased again."
 → Wrong. Look only at first and last point. If last value is higher than first → general trend is increase. The fluctuations in between belong in Mark 3.
 
+DESCRIBE A RELATIONSHIP QUESTIONS:
+Typically [4m]. Mark structure — 1 mark per complete point:
+
+Mark 1 — Identify the relationship pattern
+Three valid answers only: direct/positive relationship / inverse/negative relationship / no relationship.
+Naming both variables is NOT required for Mark 1.
+"There is a positive relationship" = sufficient for Mark 1 ✓
+Do not penalise for omitting variable names in the relationship statement.
+FAIL if: no relationship type stated at all, or relationship type is factually wrong.
+
+Mark 2 — Evidence from figure for relationship
+Must cite: specific data points from BOTH variables that demonstrate the relationship.
+Must include: units and reference points for both variables.
+Example: "When GDP per capita was $5,000, tourist arrivals were 2 million; when GDP per capita rose to $15,000, tourist arrivals increased to 8 million"
+FAIL if: only one variable cited.
+FAIL if: data cited without units or reference points.
+FAIL if: student describes the data generally without linking the two variables explicitly.
+
+Mark 3 — Anomaly
+A data point that does not fit the general relationship pattern.
+Example: "However, Japan has a high GDP per capita of $40,000 but relatively low tourist arrivals of 3 million, which does not follow the general positive relationship"
+Must: name the specific anomalous data point and explain why it is anomalous.
+FAIL if: student identifies an anomaly without explaining how it contradicts the relationship.
+FAIL if: student confuses a weak relationship with an anomaly — an anomaly is a specific outlier, not general scatter.
+
+Mark 4 — Data for anomaly
+Must cite: specific values for BOTH variables at the anomalous point.
+Example: "Japan has a GDP per capita of $40,000 but only 3 million tourist arrivals"
+FAIL if: anomaly identified without specific data for both variables.
+
+Terminology note:
+Direct = positive relationship (both terms acceptable — award mark if either used correctly).
+Inverse = negative relationship (both terms acceptable — award mark if either used correctly).
+
+Common student errors — flag these explicitly:
+Describing each variable's trend separately instead of the relationship → redirect: "You need to describe what happens to B when A changes — not what happens to each one separately."
+Identifying scatter as anomaly → redirect: anomaly is a specific named outlier, not general spread.
+Confusing direct/positive and inverse/negative → correct terminology, award mark if concept is right.
+
+Gap detection priority:
+1. Relationship type wrong or missing → surface first
+2. No evidence linking both variables → surface second
+3. No anomaly identified (if [4m] question) → surface third
+4. Anomaly present but no data → surface fourth
+
+Worked example — full 4/4:
+"There is a positive relationship between GDP per capita and tourist arrivals — as GDP per capita increases, tourist arrivals also increase [M1]. For example, when GDP per capita was $5,000, tourist arrivals were 2 million, rising to 8 million when GDP per capita reached $15,000 [M2]. However, Japan is an anomaly — despite having a high GDP per capita, its tourist arrivals are lower than expected [M3], with a GDP per capita of $40,000 but only 3 million arrivals [M4]."
+
+Worked example — failed Mark 1:
+"GDP per capita increased over time. Tourist arrivals also increased over time."
+→ Wrong. This describes two separate trends, not the relationship between them. Redirect: "What happens to tourist arrivals when GDP per capita goes up?"
+
 EVALUATION IS AUTHORITATIVE:
 The EVALUATION JSON provided at the end of the user message is the final marking result.
 Do NOT recalculate marks. Do NOT re-evaluate. Do NOT override marksAwarded.
