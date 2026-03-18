@@ -5265,7 +5265,7 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
       q.tier === "paid"
     );
     return pool.sort(() => Math.random() - 0.5).slice(0, 3);
-  }, [sessionComplete, records, currentSession, user.syllabus]);
+  }, [sessionComplete, records, currentSession, user.syllabus, allQuestions]);
 
   // Timed question selection
   const selectTimedQuestion = () => {
@@ -5981,7 +5981,8 @@ export default function App() {
     profileLoadedRef.current = true;
 
     // Fetch hidden question IDs first — must be resolved before session generation
-    const { data: hiddenRows } = await supabase.from("questions").select("id").eq("hidden", true);
+    const { data: hiddenRows, error: hiddenErr } = await supabase.from("questions").select("id").eq("hidden", true);
+    if (hiddenErr) console.warn("[Unpack] hidden fetch error:", hiddenErr.message);
     const freshHiddenIds = new Set((hiddenRows || []).map(q => q.id));
     if (freshHiddenIds.size) setHiddenQIds(freshHiddenIds);
     const visibleBank = QUESTION_BANK.filter(q => !freshHiddenIds.has(q.id));
