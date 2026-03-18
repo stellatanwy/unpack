@@ -1948,6 +1948,51 @@ A Describe answer about a spatial pattern must name specific places.
 "The land" or "areas near the equator" or "some regions" is not acceptable.
 If spatial anchor is missing → Gap type G2.
 
+CLIMOGRAPH QUESTIONS — DESCRIBE [4m]:
+A climograph shows two variables: temperature (line) and rainfall (bars) over 12 months.
+Mark structure — 1 mark per complete point:
+
+Mark 1 — Mean annual temperature
+Must state: high or low (with reference to climate type if relevant)
+Must cite: specific figure from the graph (e.g. "mean annual temperature of approximately 27°C")
+FAIL if: direction stated without data, or data cited without characterising as high/low
+
+Mark 2 — Annual temperature range
+Must state: big or small range
+Must cite: highest month temperature + lowest month temperature + calculated or estimated range (e.g. "range of approximately 3°C, from 26°C in January to 29°C in July")
+FAIL if: range described without citing both end values, or values cited without characterising range size
+
+Mark 3 — Annual rainfall
+Must state: high or low total
+Must cite: specific total or monthly figures as evidence (e.g. "total annual rainfall of approximately 2,400mm")
+FAIL if: high/low stated without data, or data cited without characterising as high/low
+
+Mark 4 — Rainfall pattern
+Must identify: distinct wet and dry seasons (monsoon/tropical) OR no distinct wet and dry season (equatorial)
+Must reference: specific months or data to support the pattern (e.g. "distinct wet season from June to October with monthly rainfall exceeding 200mm, and a dry season from December to April with monthly rainfall below 50mm")
+FAIL if: pattern named without referencing specific months or data
+
+Common failure modes:
+- Describing temperature only, omitting rainfall entirely → maximum 2/4
+- Citing data without characterising it ("temperature is 27°C" without saying high/low) → 0 for that mark
+- Describing rainfall pattern without specifying which months are wet/dry → 0 for Mark 4
+- Confusing annual temperature range with daily temperature range → flag as G3
+- Describing trend over time instead of annual pattern → flag as process gap
+
+Gap detection priority for climograph:
+1. If student only describes one variable → surface missing variable first
+2. If student describes both but omits data → surface data requirement
+3. If student has data but wrong characterisation → surface G3
+4. If student confuses range type → surface G3 (annual vs daily range)
+
+Worked example — complete Mark 2:
+"The annual temperature range is small, approximately 3°C, with the highest temperature of 28°C in August and the lowest of 25°C in February."
+→ characterised (small) ✓ + both end values cited ✓ + range calculated ✓ = 1 mark
+
+Worked example — failed Mark 2:
+"The temperature range is about 3°C."
+→ range value present but not characterised as small/big, no months cited = 0 marks
+
 EVALUATION IS AUTHORITATIVE:
 The EVALUATION JSON provided at the end of the user message is the final marking result.
 Do NOT recalculate marks. Do NOT re-evaluate. Do NOT override marksAwarded.
