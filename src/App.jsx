@@ -4384,7 +4384,8 @@ const ThisWeekTab = ({ session, syllabus, onAttempt, user, onUpgrade, onSettings
   const total = sessionQs.length;
   const lastUpdate = user?.lastTopicUpdate;
   const topicNudge = lastUpdate && (Date.now() - lastUpdate > 21 * 24 * 60 * 60 * 1000);
-  const attemptedIds = new Set(records.map(r => r.questionId));
+  const weekStartMs = session?.weekStart ? new Date(session.weekStart).getTime() : 0;
+  const attemptedIds = new Set(records.filter(r => r.timestamp >= weekStartMs).map(r => r.questionId));
 
   // Resume at first unattempted question when session changes or on mount
   useEffect(() => {
