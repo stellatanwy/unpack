@@ -4369,7 +4369,7 @@ const QuestionScreen = ({ q, qIdx, total, sessionQs, sessionCompleted, onAttempt
 };
 
 // ─── THIS WEEK TAB ─────────────────────────────────────────────────────────────
-const ThisWeekTab = ({ session, syllabus, onAttempt, user, onUpgrade, onSettings, onUpdateTopics, onFinish }) => {
+const ThisWeekTab = ({ session, syllabus, onAttempt, user, onUpgrade, onSettings, onUpdateTopics, onFinish, records = [] }) => {
   const [activeIdx, setActiveIdx] = useState(0);
 
   const examDate = user?.examDate ? new Date(user.examDate) : null;
@@ -4384,9 +4384,23 @@ const ThisWeekTab = ({ session, syllabus, onAttempt, user, onUpgrade, onSettings
   const total = sessionQs.length;
   const lastUpdate = user?.lastTopicUpdate;
   const topicNudge = lastUpdate && (Date.now() - lastUpdate > 21 * 24 * 60 * 60 * 1000);
+  const attemptedIds = new Set(records.map(r => r.questionId));
 
-  // Reset activeIdx when session changes
-  useEffect(() => { setActiveIdx(0); }, [session?.weekStart]);
+  // Resume at first unattempted question when session changes or on mount
+  useEffect(() => {
+    const firstUnattempted = sessionQs.findIndex(q => !attemptedIds.has(q.id));
+    setActiveIdx(firstUnattempted === -1 ? total - 1 : firstUnattempted);
+  }, [session?.weekStart]); // eslint-disable-line
+
+  const allDone = total > 0 && sessionQs.every(q => attemptedIds.has(q.id));
+  if (allDone) return (
+    <div style={{ textAlign: "center", padding: 48 }}>
+      <div style={{ fontSize: 36, marginBottom: 12 }}>✅</div>
+      <div style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, color: C.text, fontSize: 20, marginBottom: 8 }}>Session complete</div>
+      <div style={{ color: C.mid, fontSize: 14, marginBottom: 20 }}>You've finished all questions for this week. New session on Monday.</div>
+      <button onClick={onFinish} className="hl" style={{ background: C.green, color: "#fff", border: "none", borderRadius: 10, padding: "10px 22px", fontFamily: "'DM Sans',sans-serif", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>Go to dashboard →</button>
+    </div>
+  );
 
   if (session?.expired) return (
     <div style={{ textAlign: "center", padding: 40 }}>
@@ -6342,7 +6356,7 @@ export default function App() {
                     allQuestions={activeBank}
                   />
                 ) : canAccess(tier, "basic") ? (
-                  <ThisWeekTab session={session} syllabus={syllabus} onAttempt={handleAttempt} user={user} onUpgrade={handleUpgrade} onSettings={() => setShowSettings(true)} onUpdateTopics={() => setShowTopicUpdate(true)} onFinish={() => setTab("dashboard")} />
+                  <ThisWeekTab session={session} syllabus={syllabus} onAttempt={handleAttempt} user={user} onUpgrade={handleUpgrade} onSettings={() => setShowSettings(true)} onUpdateTopics={() => setShowTopicUpdate(true)} onFinish={() => setTab("dashboard")} records={records} />
                 ) : (
                   <UpgradePrompt reason="Upgrade to Basic to access weekly sessions" onSignup={() => setShowOnboarding(true)} onUpgrade={handleUpgrade} userTier={tier} />
                 )
