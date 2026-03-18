@@ -6272,9 +6272,18 @@ export default function App() {
         {/* Landing nav — overlaid on dark green hero */}
         <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 24px", height: 60, position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, background: "rgba(13,43,31,0.9)", backdropFilter: "blur(8px)", borderBottom: `1px solid ${C.borderOnDark}` }}>
           <span style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: 18, color: C.textOnDark }}>Unpack</span>
-          <div style={{ display: "flex", gap: 10 }}>
-            <button onClick={() => setAuth("signin")} style={{ background: "transparent", border: `1px solid ${C.borderOnDark}`, color: C.textOnDark, borderRadius: 8, padding: "6px 16px", fontSize: 13, opacity: 0.8 }}>Sign in</button>
-            <button onClick={() => setShowOnboarding(true)} className="hl" style={{ background: C.coral, border: "none", color: C.deepBg, borderRadius: 8, padding: "6px 16px", fontSize: 13, fontWeight: 700 }}>Sign up free</button>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            {user ? (
+              <>
+                <span style={{ color: C.textOnDark, fontSize: 13, opacity: 0.7 }}>{user.name}</span>
+                <button onClick={() => setPage("app")} className="hl" style={{ background: C.coral, border: "none", color: C.deepBg, borderRadius: 8, padding: "6px 16px", fontSize: 13, fontWeight: 700 }}>Go to app →</button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => setAuth("signin")} style={{ background: "transparent", border: `1px solid ${C.borderOnDark}`, color: C.textOnDark, borderRadius: 8, padding: "6px 16px", fontSize: 13, opacity: 0.8 }}>Sign in</button>
+                <button onClick={() => setShowOnboarding(true)} className="hl" style={{ background: C.coral, border: "none", color: C.deepBg, borderRadius: 8, padding: "6px 16px", fontSize: 13, fontWeight: 700 }}>Sign up free</button>
+              </>
+            )}
           </div>
         </header>
         {/* pt-[60px] to clear fixed nav */}
