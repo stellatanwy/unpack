@@ -401,6 +401,11 @@ const ONBOARDING_DEFAULTS = {
 const TIER_RANK = { null: 0, "free-account": 1, basic: 2, plus: 3 };
 const canAccess = (userTier, req) => (TIER_RANK[userTier] ?? 0) >= (TIER_RANK[req] ?? 0);
 
+// A question needs a figure (and should be excluded from practice pools) if:
+// - it's explicitly marked figureRequired, OR
+// - it has a figure object but no uploaded src/srcs yet
+const needsFigure = (q) => q.figureRequired || (q.figure && !q.figure?.src && !q.figure?.srcs?.length);
+
 // ─── QUESTION BANK ────────────────────────────────────────────────────────────
 // syllabus: array of syllabus IDs this question applies to
 const QUESTION_BANK = [
@@ -2179,7 +2184,7 @@ const generateSession = (user, records, allQuestions, currentSession, completedS
   if (isFreeAccount) {
     const freePool = allQuestions.filter(q =>
       q.tier === "free" &&
-      !q.figureRequired &&
+      !needsFigure(q) &&
       q.syllabus.includes(user.syllabus || "O-Elective")
     );
     return {
@@ -2256,7 +2261,7 @@ const generateSession = (user, records, allQuestions, currentSession, completedS
     }
   }
   const availableQuestions = allQuestions.filter(q =>
-    !q.figureRequired &&
+    !needsFigure(q) &&
     q.syllabus.includes(syllabus) &&
     q.tier === "paid" &&
     (!coveredClusters || coveredClusters.includes(q.cluster))
@@ -4566,7 +4571,7 @@ const PaperSimulation = ({ user, syllabus, onAttempt, onUpgrade, allQuestions = 
   const selectSimulationQuestions = (papDef, sectionBCluster) => {
     const pool = allQuestions.filter(q =>
       q.syllabus.includes(syllabus) &&
-      !q.figureRequired &&
+      !needsFigure(q) &&
       q.tier === "paid"
     );
     const questions = [];
@@ -5070,7 +5075,7 @@ const SessionConclusion = ({ session, records, sessionStartTime, sessionEndTime,
     const sessionClusters = new Set((session?.questions || []).map(qId => allQuestions.find(x => x.id === qId)?.cluster));
     const pool = allQuestions.filter(q =>
       q.syllabus.includes(user.syllabus) &&
-      !q.figureRequired &&
+      !needsFigure(q) &&
       !(session?.questions || []).includes(q.id) &&
       !sessionClusters.has(q.cluster) &&
       q.tier === "paid"
@@ -5270,7 +5275,7 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
     const sessionIds = new Set(currentSession?.questions || []);
     const pool = allQuestions.filter(q =>
       q.syllabus.includes(user.syllabus) &&
-      !q.figureRequired &&
+      !needsFigure(q) &&
       !sessionIds.has(q.id) &&
       !recentIds.has(q.id) &&
       q.tier === "paid" &&
@@ -5286,7 +5291,7 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
   const selectTimedQuestion = () => {
     const pool = allQuestions.filter(q => {
       if (!q.syllabus.includes(user.syllabus)) return false;
-      if (q.figureRequired) return false;
+      if (needsFigure(q)) return false;
       if (!inCoveredCluster(q)) return false;
       if (timedConfig.skill && q.skill !== timedConfig.skill) return false;
       if (timedConfig.marks && q.marks !== timedConfig.marks) return false;
@@ -5618,7 +5623,7 @@ const SignupPromptModal = ({ type, onSignup, onClose }) => {
 
 // ─── FREE SESSION VIEW ─────────────────────────────────────────────────────────
 const FreeSessionView = ({ session, syllabus, onAttempt, user, onSignup, records = [], allQuestions = [] }) => {
-  const freeIds = allQuestions.filter(q => q.tier === "free" && !q.figureRequired && q.syllabus.includes(syllabus)).slice(0, 3).map(q => q.id);
+  const freeIds = allQuestions.filter(q => q.tier === "free" && !needsFigure(q) && q.syllabus.includes(syllabus)).slice(0, 3).map(q => q.id);
   const sessionQs = (session?.questions || freeIds).map(id => allQuestions.find(q => q.id === id)).filter(Boolean);
   const total = sessionQs.length;
   const sessionCompleted = session?.completed || [];
@@ -6270,7 +6275,7 @@ export default function App() {
       const n = freeCount + 1;
       setFreeCount(n);
       await ss("gm4_free", n);
-      const freeQIds = activeBank.filter(q => q.tier === "free" && !q.figureRequired && q.syllabus.includes(syllabus || "O-Elective")).map(q => q.id);
+      const freeQIds = activeBank.filter(q => q.tier === "free" && !needsFigure(q) && q.syllabus.includes(syllabus || "O-Elective")).map(q => q.id);
       const allAttemptedNow = freeQIds.every(id => id === record.questionId || records.some(r => r.questionId === id));
       if (allAttemptedNow) setSignupPrompt("completed");
     }
