@@ -5932,6 +5932,161 @@ const Landing = ({ onStart, onSignup }) => (
   </div>
 );
 
+// ─── ACCOUNT TAB ──────────────────────────────────────────────────────────────
+const AccountTab = ({ user, tier, syllabus, onEditTopics, onSettings, onUpgrade, onChangeTier, onDeleteAccount, onLogout }) => {
+  const [confirmCancel, setConfirmCancel] = useState(null); // null | 'downgrade-basic' | 'downgrade-free' | 'delete'
+  const [deleteLoading, setDeleteLoading] = useState(false);
+
+  const tc = user?.topicsCovered;
+  const sylClusters = SYLLABUSES[syllabus]?.clusters || Object.keys(ONBOARDING_TOPICS);
+  const visibleClusters = Object.entries(ONBOARDING_TOPICS).filter(([c]) => sylClusters.includes(c));
+  const allTopicIds = visibleClusters.flatMap(([, ts]) => ts.map(t => t.id));
+  const coveredIds = !tc || tc === "all" ? allTopicIds : Array.isArray(tc) ? tc : [];
+
+  const row = (label, value) => (
+    <div style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: `1px solid ${C.border}` }}>
+      <span style={{ fontSize: 13, color: C.mid }}>{label}</span>
+      <span style={{ fontSize: 13, fontWeight: 600, color: C.text }}>{value}</span>
+    </div>
+  );
+
+  const TIER_LABELS = { null: "Free", "free-account": "Free", basic: "Basic", plus: "Plus" };
+
+  return (
+    <div style={{ maxWidth: 560, margin: "0 auto" }}>
+      <div style={{ fontFamily: "'Clash Display',sans-serif", fontSize: 22, fontWeight: 700, color: C.text, marginBottom: 20 }}>Account</div>
+
+      {/* ── Profile ── */}
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "18px 20px", marginBottom: 14 }}>
+        <div style={{ fontWeight: 700, color: C.text, fontSize: 15, marginBottom: 2 }}>{user?.name}</div>
+        <div style={{ color: C.light, fontSize: 13, marginBottom: 10 }}>{user?.email}</div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <span style={{ background: C.coralL, color: C.green, borderRadius: 10, padding: "3px 12px", fontSize: 12, fontWeight: 700 }}>{TIER_LABELS[tier] || "Free"}</span>
+          <span style={{ background: C.bg, color: C.light, borderRadius: 10, padding: "3px 12px", fontSize: 12 }}>{SYLLABUS_LABELS[user?.syllabus] || user?.syllabus}</span>
+        </div>
+      </div>
+
+      {/* ── Topics covered ── */}
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 20px", marginBottom: 14 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <div>
+            <div style={{ fontWeight: 700, color: C.text, fontSize: 14 }}>Topics covered</div>
+            <div style={{ color: C.light, fontSize: 12, marginTop: 2 }}>{coveredIds.length} of {allTopicIds.length} topics</div>
+          </div>
+          <button onClick={onEditTopics} className="hl"
+            style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 8, padding: "6px 14px", fontWeight: 700, fontSize: 12 }}>
+            Edit →
+          </button>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {visibleClusters.map(([cluster, topics]) => {
+            const cc = CLUSTER_COLOR[cluster] || {};
+            const coveredCount = topics.filter(t => coveredIds.includes(t.id)).length;
+            const pct = Math.round((coveredCount / topics.length) * 100);
+            return (
+              <div key={cluster}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: cc.dot || C.coral, flexShrink: 0 }} />
+                    <span style={{ fontSize: 12, fontWeight: 600, color: C.text }}>{cluster}</span>
+                  </div>
+                  <span style={{ fontSize: 11, color: C.light }}>{coveredCount}/{topics.length}</span>
+                </div>
+                <div style={{ height: 4, background: C.border, borderRadius: 2 }}>
+                  <div style={{ height: "100%", width: `${pct}%`, background: pct === 100 ? C.green : C.coral, borderRadius: 2, transition: "width 0.3s" }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Subscription ── */}
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 20px", marginBottom: 14 }}>
+        <div style={{ fontWeight: 700, color: C.text, fontSize: 14, marginBottom: 14 }}>Subscription</div>
+        {row("Current plan", TIER_LABELS[tier] || "Free")}
+        {row("Monthly price", tier === "plus" ? "$15.90/mo" : tier === "basic" ? "$12.90/mo" : "Free")}
+        <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8 }}>
+          {tier !== "plus" && (
+            <button onClick={onUpgrade} className="hl"
+              style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 10, padding: "10px 0", fontWeight: 700, fontSize: 13, width: "100%", cursor: "pointer" }}>
+              {tier === "basic" ? "Upgrade to Plus ($15.90/mo) →" : "Upgrade to Basic ($12.90/mo) →"}
+            </button>
+          )}
+          {tier === "plus" && (
+            confirmCancel === "downgrade-basic" ? (
+              <div style={{ background: C.amberL, border: `1px solid ${C.amber}`, borderRadius: 10, padding: "14px 16px" }}>
+                <div style={{ fontSize: 13, color: C.text, fontWeight: 600, marginBottom: 6 }}>Downgrade to Basic?</div>
+                <div style={{ fontSize: 12, color: C.mid, marginBottom: 12 }}>You'll lose access to My Questions and Plus features. Takes effect immediately.</div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => setConfirmCancel(null)} style={{ flex: 1, background: "none", border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 0", fontSize: 12, color: C.mid, cursor: "pointer" }}>Keep Plus</button>
+                  <button onClick={async () => { await onChangeTier("basic"); setConfirmCancel(null); }} style={{ flex: 1, background: C.amber, color: "#fff", border: "none", borderRadius: 8, padding: "8px 0", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>Confirm downgrade</button>
+                </div>
+              </div>
+            ) : (
+              <button onClick={() => setConfirmCancel("downgrade-basic")}
+                style={{ background: "none", border: `1px solid ${C.border}`, color: C.mid, borderRadius: 10, padding: "10px 0", fontWeight: 600, fontSize: 13, width: "100%", cursor: "pointer" }}>
+                Downgrade to Basic
+              </button>
+            )
+          )}
+          {(tier === "plus" || tier === "basic") && (
+            confirmCancel === "downgrade-free" ? (
+              <div style={{ background: C.coralL, border: `1px solid ${C.coral}40`, borderRadius: 10, padding: "14px 16px" }}>
+                <div style={{ fontSize: 13, color: C.text, fontWeight: 600, marginBottom: 6 }}>Cancel subscription?</div>
+                <div style={{ fontSize: 12, color: C.mid, marginBottom: 12 }}>You'll be moved to the Free plan and lose access to your weekly sessions and question bank. Takes effect immediately.</div>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button onClick={() => setConfirmCancel(null)} style={{ flex: 1, background: "none", border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 0", fontSize: 12, color: C.mid, cursor: "pointer" }}>Keep plan</button>
+                  <button onClick={async () => { await onChangeTier("free-account"); setConfirmCancel(null); }} style={{ flex: 1, background: C.red, color: "#fff", border: "none", borderRadius: 8, padding: "8px 0", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>Cancel subscription</button>
+                </div>
+              </div>
+            ) : (
+              <button onClick={() => setConfirmCancel("downgrade-free")}
+                style={{ background: "none", border: `1px solid ${C.border}`, color: C.mid, borderRadius: 10, padding: "10px 0", fontWeight: 600, fontSize: 13, width: "100%", cursor: "pointer" }}>
+                Cancel subscription
+              </button>
+            )
+          )}
+        </div>
+      </div>
+
+      {/* ── Other settings ── */}
+      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 20px", marginBottom: 14 }}>
+        <div style={{ fontWeight: 700, color: C.text, fontSize: 14, marginBottom: 12 }}>Settings</div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <button onClick={onSettings} style={{ background: "none", border: `1px solid ${C.border}`, color: C.text, borderRadius: 10, padding: "10px 16px", fontWeight: 600, fontSize: 13, cursor: "pointer", textAlign: "left" }}>Edit syllabus &amp; exam date →</button>
+          <button onClick={onLogout} style={{ background: "none", border: `1px solid ${C.border}`, color: C.mid, borderRadius: 10, padding: "10px 16px", fontWeight: 600, fontSize: 13, cursor: "pointer", textAlign: "left" }}>Sign out</button>
+        </div>
+      </div>
+
+      {/* ── Danger zone ── */}
+      <div style={{ border: `1px solid ${C.red}40`, borderRadius: 14, padding: "16px 20px" }}>
+        <div style={{ fontWeight: 700, color: C.red, fontSize: 13, marginBottom: 10 }}>Danger zone</div>
+        {confirmCancel === "delete" ? (
+          <div>
+            <div style={{ fontSize: 13, color: C.text, fontWeight: 600, marginBottom: 4 }}>Delete your account?</div>
+            <div style={{ fontSize: 12, color: C.mid, marginBottom: 12 }}>This permanently deletes your profile and all progress. This cannot be undone.</div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <button onClick={() => setConfirmCancel(null)} style={{ flex: 1, background: "none", border: `1px solid ${C.border}`, borderRadius: 8, padding: "9px 0", fontSize: 13, color: C.mid, cursor: "pointer" }}>Cancel</button>
+              <button
+                disabled={deleteLoading}
+                onClick={async () => { setDeleteLoading(true); await onDeleteAccount(); }}
+                style={{ flex: 1, background: C.red, color: "#fff", border: "none", borderRadius: 8, padding: "9px 0", fontSize: 13, fontWeight: 700, cursor: "pointer", opacity: deleteLoading ? 0.6 : 1 }}>
+                {deleteLoading ? "Deleting…" : "Yes, delete my account"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button onClick={() => setConfirmCancel("delete")}
+            style={{ background: "none", border: `1px solid ${C.red}60`, color: C.red, borderRadius: 10, padding: "9px 18px", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>
+            Delete account
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
   const [hiddenQIds, setHiddenQIds] = useState(new Set());
   const [page, setPage] = useState("home");
@@ -6245,6 +6400,21 @@ export default function App() {
 
   const handleUpgrade = () => alert("Production: redirect to Stripe checkout.\nBasic=$12.90/mo, Plus=$15.90/mo");
 
+  const handleChangeTier = async (newTier) => {
+    const updatedUser = { ...user, tier: newTier };
+    setUser(updatedUser);
+    await ss("gm4_user", updatedUser);
+    await supabase.from("profiles").update({ tier: newTier }).eq("id", (await supabase.auth.getUser()).data.user?.id);
+  };
+
+  const handleDeleteAccount = async () => {
+    const sbUser = (await supabase.auth.getUser()).data.user;
+    if (sbUser) await supabase.from("profiles").delete().eq("id", sbUser.id);
+    // Clear all local data
+    for (const k of ["gm4_user","gm4_records","gm4_free","gm4_session","gm4_syllabus","gm4_completed_sessions","gm4_onboarding_draft"]) localStorage.removeItem(k);
+    await supabase.auth.signOut();
+  };
+
   const tier = user?.tier || null;
   const syl = SYLLABUSES[syllabus] || SYLLABUSES["O-Elective"];
   const isFreeAccount = !tier || tier === "free-account";
@@ -6392,70 +6562,17 @@ export default function App() {
 
               {/* ACCOUNT */}
               {tab === "account" && (
-                <div>
-                  <div style={{ fontFamily: "'Clash Display',sans-serif", fontSize: 22, fontWeight: 700, color: C.text, marginBottom: 20 }}>Account</div>
-                  <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "20px 22px", marginBottom: 12 }}>
-                    <div style={{ fontWeight: 700, color: C.text, fontSize: 15, marginBottom: 2 }}>{user?.name}</div>
-                    <div style={{ color: C.light, fontSize: 13, marginBottom: 10 }}>{user?.email}</div>
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                      <span style={{ background: C.coralL, color: C.green, borderRadius: 10, padding: "3px 12px", fontSize: 12, fontWeight: 700 }}>
-                        {tier === "plus" ? "Plus" : tier === "basic" ? "Basic" : "Free"}
-                      </span>
-                      <span style={{ background: C.bg, color: C.light, borderRadius: 10, padding: "3px 12px", fontSize: 12 }}>
-                        {SYLLABUS_LABELS[user?.syllabus] || user?.syllabus}
-                      </span>
-                    </div>
-                  </div>
-                  {/* Topics covered */}
-                  {(() => {
-                    const tc = user?.topicsCovered;
-                    const sylClusters = SYLLABUSES[syllabus]?.clusters || Object.keys(ONBOARDING_TOPICS);
-                    const visibleClusters = Object.entries(ONBOARDING_TOPICS).filter(([c]) => sylClusters.includes(c));
-                    const allTopicIds = visibleClusters.flatMap(([, ts]) => ts.map(t => t.id));
-                    const coveredIds = !tc || tc === "all" ? allTopicIds : Array.isArray(tc) ? tc : [];
-                    return (
-                      <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 20px", marginBottom: 14 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                          <div>
-                            <div style={{ fontWeight: 700, color: C.text, fontSize: 14 }}>Topics covered</div>
-                            <div style={{ color: C.light, fontSize: 12, marginTop: 2 }}>{coveredIds.length} of {allTopicIds.length} topics</div>
-                          </div>
-                          <button onClick={() => setShowTopicUpdate(true)} className="hl"
-                            style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 8, padding: "6px 14px", fontWeight: 700, fontSize: 12 }}>
-                            Edit →
-                          </button>
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                          {visibleClusters.map(([cluster, topics]) => {
-                            const cc = CLUSTER_COLOR[cluster] || {};
-                            const coveredCount = topics.filter(t => coveredIds.includes(t.id)).length;
-                            const pct = Math.round((coveredCount / topics.length) * 100);
-                            return (
-                              <div key={cluster}>
-                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
-                                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: cc.dot || C.coral, flexShrink: 0 }} />
-                                    <span style={{ fontSize: 12, fontWeight: 600, color: C.text }}>{cluster}</span>
-                                  </div>
-                                  <span style={{ fontSize: 11, color: C.light }}>{coveredCount}/{topics.length}</span>
-                                </div>
-                                <div style={{ height: 4, background: C.border, borderRadius: 2 }}>
-                                  <div style={{ height: "100%", width: `${pct}%`, background: pct === 100 ? C.green : C.coral, borderRadius: 2, transition: "width 0.3s" }} />
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })()}
-
-                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                    <button onClick={() => setShowSettings(true)} style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 10, padding: "10px 22px", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>Manage account →</button>
-                    {tier !== "plus" && <button onClick={handleUpgrade} className="hl" style={{ background: "none", border: `1.5px solid ${C.coral}`, color: C.green, borderRadius: 10, padding: "10px 22px", fontWeight: 700, fontSize: 13 }}>Upgrade</button>}
-                    <button onClick={handleLogout} style={{ background: "none", border: `1px solid ${C.border}`, color: C.mid, borderRadius: 10, padding: "10px 22px", fontWeight: 600, fontSize: 13, cursor: "pointer" }}>Sign out</button>
-                  </div>
-                </div>
+                <AccountTab
+                  user={user}
+                  tier={tier}
+                  syllabus={syllabus}
+                  onEditTopics={() => setShowTopicUpdate(true)}
+                  onSettings={() => setShowSettings(true)}
+                  onUpgrade={handleUpgrade}
+                  onChangeTier={handleChangeTier}
+                  onDeleteAccount={handleDeleteAccount}
+                  onLogout={handleLogout}
+                />
               )}
             </>
           )}
