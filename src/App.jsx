@@ -2405,7 +2405,7 @@ const classifySubmission = async (question, marks, answer, previousAnswer = null
   }
   try {
     const userMsg = `Question [${marks} marks]: ${question}\n\nStudent's answer: ${answer}`;
-    const raw = await callClaude(CLASSIFIER_SYSTEM, userMsg, 150);
+    const raw = await callClaude("classifier", userMsg);
     const result = JSON.parse(raw.replace(/```json|```/g, "").trim());
     return { verdict: result.verdict, message: result.verdict === "fail" ? result.message.replace("[X]", marks) : null };
   } catch {
@@ -2687,7 +2687,7 @@ const countActivityMarks = async (question, totalMarks, answer) => {
   }
   try {
     const msg = `Question [${totalMarks} marks]: ${question}\n\nStudent answer: ${answer}\n\ntotalMarks cap: ${totalMarks}`;
-    const raw = await callClaude(COUNT_SYSTEM, msg, 200);
+    const raw = await callClaude("count", msg);
     const result = JSON.parse(raw.replace(/```json|```/g, "").trim());
     result.marksAwarded = Math.min(result.marksAwarded, totalMarks);
     // Safety net: model undercounted but code scan confirms full marks
@@ -2796,7 +2796,7 @@ const parseFeedback = async (text, questionMarks = null) => {
     const input = questionMarks != null
       ? `QUESTION_MARKS: ${questionMarks}\n\n${text}`
       : text;
-    const raw = await callClaude(PARSE_SYSTEM, input, 300);
+    const raw = await callClaude("parse", input);
     const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
     // Authoritative totalMarks from metadata overrides whatever the model wrote
     if (questionMarks != null) parsed.totalMarks = questionMarks;
@@ -3236,11 +3236,11 @@ const QuestionCard = ({ q, onAttempt, canSubmit, onUpgrade, syllabus, user, bonu
       + markingNote(q.question, q.marks)
       + `\n\nStudent answer: ${answer}`;
     try {
-      let evalRaw = await callClaude(EVAL_SYSTEM, userMsg, 600);
+      let evalRaw = await callClaude("eval", userMsg);
       let evalResult;
       evalResult = extractJSON(evalRaw);
       if (!evalResult) {
-        evalRaw = await callClaude(EVAL_SYSTEM, userMsg, 600);
+        evalRaw = await callClaude("eval", userMsg);
         evalResult = extractJSON(evalRaw);
       }
       if (!evalResult || (!evalResult.isComplete && !evalResult.primaryGap && !(evalResult.gaps?.length))) {
@@ -3249,7 +3249,7 @@ const QuestionCard = ({ q, onAttempt, canSubmit, onUpgrade, syllabus, user, bonu
         return;
       }
       const feedbackInput = `${userMsg}\n\nEVALUATION (fixed — do not recalculate):\n${JSON.stringify(evalResult, null, 2)}`;
-      let fb = stripAudit(await callClaude(FEEDBACK_SYSTEM, feedbackInput, 450));
+      let fb = stripAudit(await callClaude("feedback", feedbackInput));
       const parsed = evalToParsed(evalResult, q.marks);
       fb = sealIfComplete(fb, parsed, q.marks);
       setAttempts(p => [...p, { feedback: fb, parsed, answerText: answer }]);
@@ -3568,14 +3568,14 @@ const CustomQuestion = ({ onAttempt, syllabus, user }) => {
     try {
       const qMarks = parseInt(qData.marks);
       const evalRaw = figureImage
-        ? await callClaudeWithImage(EVAL_SYSTEM, userMsg, figureImage.base64, figureImage.mediaType, 600)
-        : await callClaude(EVAL_SYSTEM, userMsg, 600);
+        ? await callClaudeWithImage("eval", userMsg, figureImage.base64, figureImage.mediaType)
+        : await callClaude("eval", userMsg);
       let evalResult;
       evalResult = extractJSON(evalRaw) || { marksAwarded: null, totalMarks: qMarks, markBand: 'L1', isComplete: false, completedPoints: [], gaps: [], primaryGap: null };
       const feedbackInput = `${userMsg}\n\nEVALUATION (fixed — do not recalculate):\n${JSON.stringify(evalResult, null, 2)}`;
       const rawFb = figureImage
-        ? await callClaudeWithImage(FEEDBACK_SYSTEM, feedbackInput, figureImage.base64, figureImage.mediaType, 450)
-        : await callClaude(FEEDBACK_SYSTEM, feedbackInput, 450);
+        ? await callClaudeWithImage("feedback", feedbackInput, figureImage.base64, figureImage.mediaType)
+        : await callClaude("feedback", feedbackInput);
       let fb = stripAudit(rawFb);
       const parsed = evalToParsed(evalResult, qMarks);
       fb = sealIfComplete(fb, parsed, qMarks);
@@ -4471,11 +4471,11 @@ const QuestionScreen = ({ q, qIdx, total, sessionQs, sessionCompleted, onAttempt
       + markingNote(q.question, q.marks)
       + `\n\nStudent answer: ${answer}`;
     try {
-      let evalRaw = await callClaude(EVAL_SYSTEM, userMsg, 600);
+      let evalRaw = await callClaude("eval", userMsg);
       let evalResult;
       evalResult = extractJSON(evalRaw);
       if (!evalResult) {
-        evalRaw = await callClaude(EVAL_SYSTEM, userMsg, 600);
+        evalRaw = await callClaude("eval", userMsg);
         evalResult = extractJSON(evalRaw);
       }
       if (!evalResult || (!evalResult.isComplete && !evalResult.primaryGap && !(evalResult.gaps?.length))) {
@@ -4484,7 +4484,7 @@ const QuestionScreen = ({ q, qIdx, total, sessionQs, sessionCompleted, onAttempt
         return;
       }
       const feedbackInput = `${userMsg}\n\nEVALUATION (fixed — do not recalculate):\n${JSON.stringify(evalResult, null, 2)}`;
-      let fb = stripAudit(await callClaude(FEEDBACK_SYSTEM, feedbackInput, 450));
+      let fb = stripAudit(await callClaude("feedback", feedbackInput));
       const parsed = evalToParsed(evalResult, q.marks);
       fb = sealIfComplete(fb, parsed, q.marks);
       setAttempts(p => [...p, { feedback: fb, parsed, answerText: answer }]);
@@ -4957,11 +4957,11 @@ const PaperSimulation = ({ user, syllabus, onAttempt, onUpgrade, allQuestions = 
         + (currentQ.figure ? `\n\nFigure: ${currentQ.figure.caption}` : "")
         + markingNote(currentQ.question, currentQ.marks)
         + `\n\n---TIMED EXAM ATTEMPT---\nStudent answer: ${currentAnswerRef.current || "(no answer submitted)"}`;
-      const evalRaw = await callClaude(EVAL_SYSTEM, userMsg, 600);
+      const evalRaw = await callClaude("eval", userMsg);
       let evalResult;
       evalResult = extractJSON(evalRaw) || { marksAwarded: null, totalMarks: currentQ.marks, markBand: 'L1', isComplete: false, completedPoints: [], gaps: [], primaryGap: null };
       const feedbackInput = `${userMsg}\n\nEVALUATION (fixed — do not recalculate):\n${JSON.stringify(evalResult, null, 2)}`;
-      let fb = stripAudit(await callClaude(FEEDBACK_SYSTEM, feedbackInput, 450));
+      let fb = stripAudit(await callClaude("feedback", feedbackInput));
       const parsed = evalToParsed(evalResult, currentQ.marks);
       fb = sealIfComplete(fb, parsed, currentQ.marks);
       const answerRecord = { q: currentQ, answer: currentAnswerRef.current, feedback: fb, parsed };
@@ -5617,11 +5617,11 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
       + markingNote(q.question, q.marks)
       + `\n\n---TIMED PRACTICE ATTEMPT---\nStudent answer: ${timedAnswer || "[No answer submitted — time ran out]"}`;
     try {
-      const evalRaw = await callClaude(EVAL_SYSTEM, userMsg, 600);
+      const evalRaw = await callClaude("eval", userMsg);
       let evalResult;
       evalResult = extractJSON(evalRaw) || { marksAwarded: null, totalMarks: q.marks, markBand: 'L1', isComplete: false, completedPoints: [], gaps: [], primaryGap: null };
       const feedbackInput = `${userMsg}\n\nEVALUATION (fixed — do not recalculate):\n${JSON.stringify(evalResult, null, 2)}`;
-      let fb = stripAudit(await callClaude(FEEDBACK_SYSTEM, feedbackInput, 450));
+      let fb = stripAudit(await callClaude("feedback", feedbackInput));
       const parsed = evalToParsed(evalResult, q.marks);
       fb = sealIfComplete(fb, parsed, q.marks);
       setTimedFeedback({ text: fb, parsed });

@@ -1,6 +1,7 @@
 // @ts-nocheck — Deno runtime; TS server does not resolve Deno globals or esm.sh imports
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { PROMPTS } from "./prompts.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -29,17 +30,22 @@ serve(async (req) => {
   }
 
   try {
-    const { system, userMsg, maxTokens = 900, image } = await req.json();
+    const { promptKey, userMsg, image } = await req.json();
 
-    if (!system || !userMsg) {
+    if (!promptKey || !userMsg) {
       return new Response(
-        JSON.stringify({ error: "Missing required fields: system, userMsg" }),
+        JSON.stringify({ error: "Missing required fields: promptKey, userMsg" }),
         { status: 400, headers: JSON_HEADERS }
       );
     }
 
-    // Hard cap on maxTokens to prevent abuse
-    const safeMaxTokens = Math.min(Number(maxTokens) || 900, 1500);
+    const prompt = PROMPTS[promptKey];
+    if (!prompt) {
+      return new Response(
+        JSON.stringify({ error: `Unknown promptKey: ${promptKey}` }),
+        { status: 400, headers: JSON_HEADERS }
+      );
+    }
 
     const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
     if (!apiKey) {
@@ -92,7 +98,7 @@ serve(async (req) => {
         );
       }
     }
-    // Unauthenticated users are not tracked (no user_id) but still allowed up to 10 calls
+    // Unauthenticated users are not tracked (no user_id) but still allowed up to anon limit
     // — IP-based limiting would require a proxy layer outside Supabase
 
     // ── Anthropic API call ──────────────────────────────────────────────────
@@ -112,8 +118,8 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",
-        max_tokens: safeMaxTokens,
-        system,
+        max_tokens: prompt.maxTokens,
+        system: prompt.system,
         messages: [{ role: "user", content: messageContent }],
       }),
     });
