@@ -14,9 +14,9 @@ const JSON_HEADERS = { ...CORS, "Content-Type": "application/json" };
 const DAILY_LIMITS: Record<string, number> = {
   plus: 100,
   basic: 50,
-  "free-account": 10,
-  free: 10,
-  anon: 10,
+  "free-account": 30,
+  free: 30,
+  anon: 30,
 };
 
 serve(async (req) => {
