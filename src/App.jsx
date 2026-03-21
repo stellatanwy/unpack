@@ -6523,11 +6523,25 @@ export default function App() {
           const q = visibleBank.find(x => x.id === id);
           return q && !needsFigure(q) && !wrongLorm(q, effectiveSyl);
         });
-        const filtered = filteredQs.length !== existingSess.questions.length
-          ? { ...existingSess, questions: filteredQs }
-          : existingSess;
-        setSession(filtered);
-        if (filtered !== existingSess) await ss("gm4_session", filtered);
+        // If filtering removed questions, check whether any valid ones remain unattempted.
+        // If all remaining are already done (or none left), regenerate rather than showing
+        // a false "session complete".
+        if (filteredQs.length !== existingSess.questions.length) {
+          const weekStartMs = new Date(existingSess.weekStart).getTime();
+          const attemptedThisWeek = new Set((r || []).filter(rec => rec.timestamp >= weekStartMs).map(rec => rec.questionId));
+          const hasUnattempted = filteredQs.some(id => !attemptedThisWeek.has(id));
+          if (!hasUnattempted) {
+            const newSess = generateSession({ ...effectiveUser, syllabus: effectiveSyl }, r || [], visibleBank, null, cs || []);
+            setSession(newSess);
+            await ss("gm4_session", newSess);
+          } else {
+            const filtered = { ...existingSess, questions: filteredQs };
+            setSession(filtered);
+            await ss("gm4_session", filtered);
+          }
+        } else {
+          setSession(existingSess);
+        }
       }
       setPage("app");
     } else {
