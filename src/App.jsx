@@ -411,6 +411,15 @@ const canAccess = (userTier, req) => (TIER_RANK[userTier] ?? 0) >= (TIER_RANK[re
 // - it has a figure object but no uploaded src/srcs yet
 const needsFigure = (q) => q.figureRequired || (q.figure && !q.figure?.src && !q.figure?.srcs?.length);
 
+// Returns true if a LORM question's marks don't match the expected LORM for the given syllabus.
+// O-Level = 9m, N-Level = 6m. Non-LORM questions always pass.
+const LORM_SKILLS = new Set(["Evaluate", "Assess", "Discuss"]);
+const wrongLorm = (q, syllabus) => {
+  if (!LORM_SKILLS.has(q.skill)) return false;
+  const expected = SYLLABUSES[syllabus]?.lormMarks;
+  return expected != null && Number(q.marks) !== expected;
+};
+
 // ─── QUESTION BANK ────────────────────────────────────────────────────────────
 // syllabus: array of syllabus IDs this question applies to
 const QUESTION_BANK = [
@@ -2551,6 +2560,7 @@ const generateSession = (user, records, allQuestions, currentSession, completedS
   }
   const availableQuestions = allQuestions.filter(q =>
     !needsFigure(q) &&
+    !wrongLorm(q, syllabus) &&
     q.syllabus.includes(syllabus) &&
     q.tier === "paid" &&
     (!coveredClusters || coveredClusters.includes(q.cluster))
@@ -6507,11 +6517,11 @@ export default function App() {
         setSession(newSess);
         await ss("gm4_session", newSess);
       } else {
-        // Strip hidden questions and figure-missing questions from the cached session
+        // Strip hidden, figure-missing, and wrong-LORM questions from the cached session
         const filteredQs = existingSess.questions.filter(id => {
           if (freshHiddenIds.has(id)) return false;
           const q = visibleBank.find(x => x.id === id);
-          return q && !needsFigure(q);
+          return q && !needsFigure(q) && !wrongLorm(q, effectiveSyl);
         });
         const filtered = filteredQs.length !== existingSess.questions.length
           ? { ...existingSess, questions: filteredQs }
