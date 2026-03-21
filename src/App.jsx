@@ -6507,9 +6507,14 @@ export default function App() {
         setSession(newSess);
         await ss("gm4_session", newSess);
       } else {
-        // Strip any hidden questions from the cached session
-        const filtered = freshHiddenIds.size
-          ? { ...existingSess, questions: existingSess.questions.filter(id => !freshHiddenIds.has(id)) }
+        // Strip hidden questions and figure-missing questions from the cached session
+        const filteredQs = existingSess.questions.filter(id => {
+          if (freshHiddenIds.has(id)) return false;
+          const q = visibleBank.find(x => x.id === id);
+          return q && !needsFigure(q);
+        });
+        const filtered = filteredQs.length !== existingSess.questions.length
+          ? { ...existingSess, questions: filteredQs }
           : existingSess;
         setSession(filtered);
         if (filtered !== existingSess) await ss("gm4_session", filtered);
