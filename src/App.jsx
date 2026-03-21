@@ -399,6 +399,11 @@ const ONBOARDING_DEFAULTS = {
 // basic: question bank + progress dashboard
 // plus: basic + My Questions (custom input)
 const TIER_RANK = { null: 0, "free-account": 1, basic: 2, plus: 3 };
+
+// ─── BETA MODE ────────────────────────────────────────────────────────────────
+// When true: hides Plus tier, hides all pricing, skips promo code screen.
+// Set to false at launch to re-enable full tier/pricing UI.
+const BETA_MODE = true;
 const canAccess = (userTier, req) => (TIER_RANK[userTier] ?? 0) >= (TIER_RANK[req] ?? 0);
 
 // A question needs a figure (and should be excluded from practice pools) if:
@@ -3725,7 +3730,7 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
       // Record the signup slot
       await supabase.from("beta_signups").insert({});
     }
-    if (selectedTier === "free") {
+    if (selectedTier === "free" || BETA_MODE) {
       goNext({ password: "", tier: "free" });
     } else {
       setShowPromoCode(true);
@@ -3805,12 +3810,12 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
             { id: "free", label: "Free", price: "$0", features: ["3 curated questions", "Full feedback", "Unlimited resubmissions"], trial: null },
             { id: "basic", label: "Basic", price: "$12.90/mo", features: ["Weekly sessions", "Progress dashboard", "7-day free trial"], trial: "7-day free trial — no card needed yet", tag: "Most popular" },
             { id: "plus", label: "Plus", price: "$15.90/mo", features: ["Everything in Basic", "+ Custom question diagnostics", "7-day free trial"], trial: "7-day free trial — no card needed yet", tag: "For serious prep" },
-          ].map(t => (
+          ].filter(t => !BETA_MODE || t.id !== "plus").map(t => (
             <div key={t.id} onClick={() => setSelectedTier(t.id)}
               style={{ flex: 1, border: `2px solid ${selectedTier === t.id ? C.coral : C.border}`, borderRadius: 12, padding: "12px 10px", cursor: "pointer", background: selectedTier === t.id ? C.coralL : "#fff", position: "relative", transition: "border-color 0.15s, background 0.15s" }}>
               {t.tag && <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", background: C.coral, color: C.deepBg, fontSize: 9, fontWeight: 700, borderRadius: 20, padding: "2px 8px", whiteSpace: "nowrap" }}>{t.tag}</div>}
               <div style={{ fontWeight: 700, fontSize: 13, color: C.text, marginBottom: 2 }}>{t.label}</div>
-              <div style={{ fontWeight: 700, fontSize: 12, color: C.coral, marginBottom: 8 }}>{t.price}</div>
+              {!BETA_MODE && <div style={{ fontWeight: 700, fontSize: 12, color: C.coral, marginBottom: 8 }}>{t.price}</div>}
               {t.features.map(f => <div key={f} style={{ fontSize: 11, color: C.mid, lineHeight: 1.6 }}>{f}</div>)}
             </div>
           ))}
@@ -5005,16 +5010,16 @@ const PaperSimulation = ({ user, syllabus, onAttempt, onUpgrade, allQuestions = 
   };
 
   // ── Tier gate ──
-  if (user?.tier !== "plus") {
+  if (BETA_MODE || user?.tier !== "plus") {
     return (
       <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "24px 22px", marginTop: 8 }}>
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: 32, marginBottom: 14 }}>📄</div>
           <div style={{ fontFamily: "'Clash Display',sans-serif", fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 8 }}>Full Paper Simulation</div>
-          <div style={{ color: C.mid, fontSize: 14, marginBottom: 24, lineHeight: 1.6, maxWidth: 320, margin: "0 auto 24px" }}>
-            Simulate real exam conditions with a full paper — all questions, timed, one submission each. Available on Plus.
+          <div style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, maxWidth: 320, margin: "0 auto" }}>
+            {BETA_MODE ? "Coming soon." : "Simulate real exam conditions with a full paper — all questions, timed, one submission each. Available on Plus."}
           </div>
-          <button onClick={onUpgrade} className="hl" style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 10, padding: "12px 28px", fontWeight: 700, fontSize: 14 }}>Upgrade to Plus →</button>
+          {!BETA_MODE && <button onClick={onUpgrade} className="hl" style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 10, padding: "12px 28px", fontWeight: 700, fontSize: 14, marginTop: 24 }}>Upgrade to Plus →</button>}
         </div>
       </div>
     );
@@ -5841,7 +5846,7 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
       </div>
 
       {/* MY QUESTIONS — Plus only */}
-      {user?.tier === "plus" ? (
+      {!BETA_MODE && (user?.tier === "plus" ? (
         <div style={{ marginBottom: 16 }}>
           <div style={{ fontWeight: 700, fontSize: 11, color: C.light, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 10 }}>My Questions</div>
           <CustomQuestion onAttempt={onAttempt} syllabus={syllabus} user={user} />
@@ -5856,7 +5861,7 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
             <button onClick={onUpgrade} className="hl" style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 8, padding: "8px 16px", fontWeight: 700, fontSize: 12, flexShrink: 0, marginLeft: 16, cursor: "pointer" }}>Upgrade →</button>
           </div>
         </div>
-      )}
+      ))}
 
       {/* FULL PAPER SIMULATION */}
       <div style={{ marginTop: 4 }}>
@@ -6179,54 +6184,56 @@ const Landing = ({ onStart, onSignup }) => (
     </section>
 
     {/* ── PRICING (dark green) ──────────────────────────────────── */}
-    <section style={{ background: C.deepBg, padding: "80px 24px" }}>
-      <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, color: C.textOnDark, marginBottom: 8 }}>Pricing</h2>
-        <p style={{ color: C.textOnDark, opacity: 0.6, fontSize: 15, marginBottom: 44 }}>Start free. No credit card, no expiry.</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12 }}>
-          {[
-            {
-              name: "Free", price: "$0", period: "forever",
-              highlight: false,
-              features: ["3 questions, always free", "Full diagnostic feedback", "Unlimited re-submissions"]
-            },
-            {
-              name: "Basic", price: "$12.90", period: "/month",
-              highlight: false,
-              tag: "Most popular",
-              features: ["Everything in Free", "Weekly curated sessions", "Bonus additional practice", "Progress dashboard", "More sessions near exam"]
-            },
-            {
-              name: "Plus", price: "$15.90", period: "/month",
-              highlight: true,
-              tag: "For serious prep",
-              features: ["Everything in Basic", "Custom question diagnostics", "Full paper simulation (coming soon!)"]
-            },
-          ].map(p => (
-            <div key={p.name} style={{ background: C.green, border: `2px solid ${p.highlight ? C.coral : C.borderOnDark}`, borderRadius: 12, padding: "26px 22px", position: "relative" }}>
-              {p.tag && (
-                <div style={{ position: "absolute", top: -11, left: 18, background: p.highlight ? C.coral : C.borderOnDark, color: p.highlight ? C.deepBg : C.textOnDark, borderRadius: 4, padding: "2px 10px", fontSize: 11, fontWeight: 700 }}>{p.tag}</div>
-              )}
-              <div style={{ fontWeight: 700, fontSize: 13, color: C.textOnDark, opacity: 0.6, marginBottom: 6, letterSpacing: "0.06em" }}>{p.name.toUpperCase()}</div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 20 }}>
-                <span style={{ fontFamily: "'Fraunces', serif", fontSize: 36, fontWeight: 700, color: C.textOnDark }}>{p.price}</span>
-                <span style={{ color: C.textOnDark, opacity: 0.5, fontSize: 13 }}>{p.period}</span>
-              </div>
-              <div style={{ borderTop: `1px solid ${C.borderOnDark}`, marginBottom: 16 }} />
-              {p.features.map(f => (
-                <div key={f} style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "flex-start" }}>
-                  <span style={{ color: C.green, flexShrink: 0, fontWeight: 700 }}>✓</span>
-                  <span style={{ color: C.textOnDark, opacity: 0.75, fontSize: 13 }}>{f}</span>
+    {!BETA_MODE && (
+      <section style={{ background: C.deepBg, padding: "80px 24px" }}>
+        <div style={{ maxWidth: 860, margin: "0 auto" }}>
+          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, color: C.textOnDark, marginBottom: 8 }}>Pricing</h2>
+          <p style={{ color: C.textOnDark, opacity: 0.6, fontSize: 15, marginBottom: 44 }}>Start free. No credit card, no expiry.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12 }}>
+            {[
+              {
+                name: "Free", price: "$0", period: "forever",
+                highlight: false,
+                features: ["3 questions, always free", "Full diagnostic feedback", "Unlimited re-submissions"]
+              },
+              {
+                name: "Basic", price: "$12.90", period: "/month",
+                highlight: false,
+                tag: "Most popular",
+                features: ["Everything in Free", "Weekly curated sessions", "Bonus additional practice", "Progress dashboard", "More sessions near exam"]
+              },
+              {
+                name: "Plus", price: "$15.90", period: "/month",
+                highlight: true,
+                tag: "For serious prep",
+                features: ["Everything in Basic", "Custom question diagnostics", "Full paper simulation (coming soon!)"]
+              },
+            ].map(p => (
+              <div key={p.name} style={{ background: C.green, border: `2px solid ${p.highlight ? C.coral : C.borderOnDark}`, borderRadius: 12, padding: "26px 22px", position: "relative" }}>
+                {p.tag && (
+                  <div style={{ position: "absolute", top: -11, left: 18, background: p.highlight ? C.coral : C.borderOnDark, color: p.highlight ? C.deepBg : C.textOnDark, borderRadius: 4, padding: "2px 10px", fontSize: 11, fontWeight: 700 }}>{p.tag}</div>
+                )}
+                <div style={{ fontWeight: 700, fontSize: 13, color: C.textOnDark, opacity: 0.6, marginBottom: 6, letterSpacing: "0.06em" }}>{p.name.toUpperCase()}</div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 20 }}>
+                  <span style={{ fontFamily: "'Fraunces', serif", fontSize: 36, fontWeight: 700, color: C.textOnDark }}>{p.price}</span>
+                  <span style={{ color: C.textOnDark, opacity: 0.5, fontSize: 13 }}>{p.period}</span>
                 </div>
-              ))}
-              <button onClick={p.name === "Free" ? onStart : onSignup} className="hl" style={{ width: "100%", marginTop: 20, background: p.highlight ? C.coral : "transparent", color: p.highlight ? C.deepBg : C.textOnDark, border: `1.5px solid ${p.highlight ? C.coral : C.borderOnDark}`, borderRadius: 8, padding: "11px 0", fontWeight: 700, fontSize: 13 }}>
-                {p.name === "Free" ? "Start free →" : "Start training →"}
-              </button>
-            </div>
-          ))}
+                <div style={{ borderTop: `1px solid ${C.borderOnDark}`, marginBottom: 16 }} />
+                {p.features.map(f => (
+                  <div key={f} style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "flex-start" }}>
+                    <span style={{ color: C.green, flexShrink: 0, fontWeight: 700 }}>✓</span>
+                    <span style={{ color: C.textOnDark, opacity: 0.75, fontSize: 13 }}>{f}</span>
+                  </div>
+                ))}
+                <button onClick={p.name === "Free" ? onStart : onSignup} className="hl" style={{ width: "100%", marginTop: 20, background: p.highlight ? C.coral : "transparent", color: p.highlight ? C.deepBg : C.textOnDark, border: `1.5px solid ${p.highlight ? C.coral : C.borderOnDark}`, borderRadius: 8, padding: "11px 0", fontWeight: 700, fontSize: 13 }}>
+                  {p.name === "Free" ? "Start free →" : "Start training →"}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    )}
 
     {/* ── FOOTER (deep green) ───────────────────────────────────── */}
     <footer style={{ background: C.deepBg, borderTop: `1px solid ${C.borderOnDark}`, padding: "28px 24px" }}>
@@ -6316,15 +6323,15 @@ const AccountTab = ({ user, tier, syllabus, onEditTopics, onSettings, onUpgrade,
       <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "16px 20px", marginBottom: 14 }}>
         <div style={{ fontWeight: 700, color: C.text, fontSize: 14, marginBottom: 14 }}>Subscription</div>
         {row("Current plan", TIER_LABELS[tier] || "Free")}
-        {row("Monthly price", tier === "plus" ? "$15.90/mo" : tier === "basic" ? "$12.90/mo" : "Free")}
+        {!BETA_MODE && row("Monthly price", tier === "plus" ? "$15.90/mo" : tier === "basic" ? "$12.90/mo" : "Free")}
         <div style={{ marginTop: 14, display: "flex", flexDirection: "column", gap: 8 }}>
-          {tier !== "plus" && (
+          {!BETA_MODE && tier !== "plus" && (
             <button onClick={onUpgrade} className="hl"
               style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 10, padding: "10px 0", fontWeight: 700, fontSize: 13, width: "100%", cursor: "pointer" }}>
               {tier === "basic" ? "Upgrade to Plus ($15.90/mo) →" : "Upgrade to Basic ($12.90/mo) →"}
             </button>
           )}
-          {tier === "plus" && (
+          {!BETA_MODE && tier === "plus" && (
             confirmCancel === "downgrade-basic" ? (
               <div style={{ background: C.amberL, border: `1px solid ${C.amber}`, borderRadius: 10, padding: "14px 16px" }}>
                 <div style={{ fontSize: 13, color: C.text, fontWeight: 600, marginBottom: 6 }}>Downgrade to Basic?</div>
@@ -6709,7 +6716,7 @@ export default function App() {
     // onAuthStateChange SIGNED_OUT clears state and redirects to home
   };
 
-  const handleUpgrade = () => alert("Production: redirect to Stripe checkout.\nBasic=$12.90/mo, Plus=$15.90/mo");
+  const handleUpgrade = () => { if (!BETA_MODE) alert("Production: redirect to Stripe checkout.\nBasic=$12.90/mo, Plus=$15.90/mo"); };
 
   const handleChangeTier = async (newTier) => {
     const updatedUser = { ...user, tier: newTier };
@@ -6796,7 +6803,7 @@ export default function App() {
                   </span>
                 </span>
                 <button onClick={() => setShowSettings(true)} style={{ background: "transparent", border: `1px solid ${C.borderOnDark}`, color: C.textOnDark, borderRadius: 8, padding: "5px 10px", fontSize: 12, opacity: 0.8 }}>⚙ Settings</button>
-                {tier !== "plus" && <button onClick={handleUpgrade} className="hl" style={{ background: C.coral, border: "none", color: C.deepBg, borderRadius: 8, padding: "5px 12px", fontSize: 12, fontWeight: 700 }}>Upgrade</button>}
+                {!BETA_MODE && tier !== "plus" && <button onClick={handleUpgrade} className="hl" style={{ background: C.coral, border: "none", color: C.deepBg, borderRadius: 8, padding: "5px 12px", fontSize: 12, fontWeight: 700 }}>Upgrade</button>}
                 <button onClick={handleLogout} style={{ background: "transparent", border: `1px solid ${C.borderOnDark}`, color: C.textOnDark, borderRadius: 8, padding: "5px 10px", fontSize: 11, opacity: 0.7 }}>Sign out</button>
               </>
             ) : (
