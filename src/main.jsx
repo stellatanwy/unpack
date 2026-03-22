@@ -5,6 +5,7 @@ import App from "./App.jsx";
 import QuestionBankAdmin from "./admin/QuestionBankAdmin.jsx";
 import QuestionPreview from "./admin/QuestionPreview.jsx";
 import StaticPage from "./StaticPage.jsx";
+import FAQ from "./FAQ.jsx";
 
 const path = window.location.pathname;
 
@@ -13,6 +14,7 @@ const root =
   path === '/preview' ? <QuestionPreview /> :
   path === '/privacy' ? <StaticPage page="privacy" /> :
   path === '/terms'   ? <StaticPage page="terms" /> :
+  path === '/faq'     ? <FAQ /> :
   <App />;
 
 createRoot(document.getElementById("root")).render(

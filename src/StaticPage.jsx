@@ -319,6 +319,7 @@ export default function StaticPage({ page }) {
 
       {/* Footer */}
       <footer style={{ borderTop: '1px solid #e8e6e0', padding: '20px 24px', textAlign: 'center', fontSize: 12, color: '#8a8aaa' }}>
+        <a href="/faq" style={{ color: '#8a8aaa', textDecoration: 'none', marginRight: 16 }}>FAQ</a>
         <a href="/privacy" style={{ color: '#8a8aaa', textDecoration: 'none', marginRight: 16 }}>Privacy Policy</a>
         <a href="/terms" style={{ color: '#8a8aaa', textDecoration: 'none' }}>Terms of Use</a>
       </footer>

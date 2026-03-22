@@ -6263,6 +6263,7 @@ const Landing = ({ onStart, onSignup }) => (
         <span style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: 17, color: C.textOnDark }}>Unpack</span>
         <span style={{ color: C.textOnDark, opacity: 0.45, fontSize: 12 }}>Built for Singapore students</span>
         <div style={{ display: "flex", gap: 20 }}>
+          <a href="/faq" target="_blank" rel="noopener noreferrer" style={{ color: C.textOnDark, opacity: 0.45, fontSize: 12, textDecoration: "none" }}>FAQ</a>
           <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: C.textOnDark, opacity: 0.45, fontSize: 12, textDecoration: "none" }}>Privacy Policy</a>
           <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: C.textOnDark, opacity: 0.45, fontSize: 12, textDecoration: "none" }}>Terms of Use</a>
         </div>
