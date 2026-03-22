@@ -3830,7 +3830,7 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
             </div>
           ))}
         </div>
-        {(selectedTier === "basic" || selectedTier === "plus") && (
+        {!BETA_MODE && (selectedTier === "basic" || selectedTier === "plus") && (
           <div style={{ fontSize: 11, color: C.mid, marginTop: 8, textAlign: "center", fontStyle: "italic" }}>
             During beta — enter an invite code after signup to unlock
           </div>
