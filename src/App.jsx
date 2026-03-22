@@ -3739,7 +3739,7 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
       await supabase.from("beta_signups").insert({});
     }
     if (selectedTier === "free" || BETA_MODE) {
-      goNext({ password: "", tier: "free" });
+      goNext({ password: "", tier: BETA_MODE ? "basic" : "free" });
     } else {
       setShowPromoCode(true);
     }
@@ -6673,7 +6673,7 @@ export default function App() {
     const userData = {
       name: onboardingData.name || "Student",
       email: onboardingData.email || "",
-      tier: onboardingData.tier === "basic" ? "basic" : onboardingData.tier === "plus" ? "plus" : "free-account",
+      tier: onboardingData.tier === "plus" ? "plus" : onboardingData.tier === "basic" ? "basic" : BETA_MODE ? "basic" : "free-account",
       syllabus: sylId,
       year: onboardingData.year || ONBOARDING_DEFAULTS.year,
       school: onboardingData.school || "",
