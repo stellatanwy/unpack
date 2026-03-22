@@ -3800,7 +3800,7 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
     <div className="fade">
       <div style={{ marginBottom: 30 }}>
         <div style={{ fontFamily: "'Clash Display',sans-serif", fontSize: 26, fontWeight: 700, color: C.text, marginBottom: 8 }}>Create your account</div>
-        <div style={{ color: C.mid, fontSize: 15 }}>Start practising Geography in minutes.</div>
+        <div style={{ color: C.mid, fontSize: 15 }}>{BETA_MODE ? "Save your progress and keep track of your reasoning gaps over time." : "Start practising Geography in minutes."}</div>
       </div>
       <input value={data.name} placeholder="Your name" style={{ ...inp, borderColor: errors.name ? C.red : C.border }}
         onChange={e => { update({ name: e.target.value }); setErrors(p => ({ ...p, name: null })); }} />
@@ -3813,7 +3813,7 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
       {errors.password && <span style={errTxt}>{errors.password}</span>}
 
       {/* ── Tier selector ── */}
-      <div style={{ marginTop: 20, marginBottom: 4 }}>
+      {!BETA_MODE && <div style={{ marginTop: 20, marginBottom: 4 }}>
         <div style={{ color: C.mid, fontSize: 13, fontWeight: 600, marginBottom: 10 }}>Choose your plan</div>
         <div style={{ display: "flex", gap: 8 }}>
           {[
@@ -3835,7 +3835,8 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
             During beta — enter an invite code after signup to unlock
           </div>
         )}
-      </div>
+      </div>}
+
 
       <label style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 18, marginBottom: 4, cursor: "pointer" }}>
         <input type="checkbox" checked={tcAccepted} onChange={e => { setTcAccepted(e.target.checked); setErrors(p => ({ ...p, terms: null })); }}
@@ -5889,19 +5890,25 @@ const PracticeTab = ({ user, records, currentSession, syllabus, onAttempt, onUpg
 // ─── SIGNUP PROMPT MODAL ───────────────────────────────────────────────────────
 const SIGNUP_PROMPT_COPY = {
   completed: {
-    title: "You've finished your 3 free questions.",
-    body: "Sign up free to save your progress, get fresh questions every week, and see your reasoning gaps close over time.",
-    cta: "Save my progress →",
+    title: "You've finished your 3 sample questions.",
+    body: BETA_MODE
+      ? "Create an account to save your learning data, get fresh questions every week, and track your reasoning gaps over time."
+      : "Sign up free to save your progress, get fresh questions every week, and see your reasoning gaps close over time.",
+    cta: "Create account →",
   },
   returning: {
     title: "Welcome back.",
-    body: "You've already started — sign up free to save your progress and pick up where you left off.",
-    cta: "Save my progress →",
+    body: BETA_MODE
+      ? "Create an account to save your learning data and pick up where you left off."
+      : "You've already started — sign up free to save your progress and pick up where you left off.",
+    cta: "Create account →",
   },
   progress: {
-    title: "Want to save your progress?",
-    body: "Sign up free to track your reasoning gaps week by week. It takes 30 seconds.",
-    cta: "Sign up free →",
+    title: BETA_MODE ? "Want to save your learning data?" : "Want to save your progress?",
+    body: BETA_MODE
+      ? "Create an account to track your reasoning gaps week by week. It takes 30 seconds."
+      : "Sign up free to track your reasoning gaps week by week. It takes 30 seconds.",
+    cta: BETA_MODE ? "Create account →" : "Sign up free →",
   },
 };
 
@@ -5947,16 +5954,18 @@ const FreeSessionView = ({ session, syllabus, onAttempt, user, onSignup, records
   const upgradeCTA = (
     <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: "18px 20px", marginTop: 24, textAlign: "center" }}>
       <div style={{ fontWeight: 700, color: C.text, fontSize: 14, marginBottom: 4 }}>
-        {!user ? "Save your progress and keep training." : "Want fresh questions every week?"}
+        {!user ? "Save your learning data." : "Want fresh questions every week?"}
       </div>
       <div style={{ color: C.mid, fontSize: 13, marginBottom: 14 }}>
         {!user
-          ? "Sign up free to get fresh questions every week and track your reasoning gaps over time."
-          : upgradeMsg}
+          ? (BETA_MODE ? "Create an account to track your reasoning gaps and get fresh questions every week." : "Sign up free to get fresh questions every week and track your reasoning gaps over time.")
+          : (BETA_MODE ? null : upgradeMsg)}
       </div>
-      <button onClick={onSignup} className="hl" style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 8, padding: "11px 24px", fontWeight: 700, fontSize: 14 }}>
-        {!user ? "Sign up free →" : "Upgrade to Basic →"}
-      </button>
+      {(!user || !BETA_MODE) && (
+        <button onClick={onSignup} className="hl" style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 8, padding: "11px 24px", fontWeight: 700, fontSize: 14 }}>
+          {!user ? (BETA_MODE ? "Create account →" : "Sign up free →") : "Upgrade to Basic →"}
+        </button>
+      )}
     </div>
   );
 
@@ -6032,14 +6041,14 @@ const FreeSessionView = ({ session, syllabus, onAttempt, user, onSignup, records
           </div>
 
           {/* ── CTA ── */}
-          <div style={{ textAlign: "center" }}>
-            <button onClick={onSignup} className="hl" style={{ width: "100%", background: C.coral, color: C.deepBg, border: "none", borderRadius: 8, padding: "14px 0", fontWeight: 700, fontSize: 16, marginBottom: 12 }}>
-              {!user ? "Sign up free — save your progress →" : "Upgrade to Basic →"}
-            </button>
-            <div style={{ fontSize: 13, color: C.textOnDark, opacity: 0.45 }}>
-              Free forever · No credit card required
+          {(!user || !BETA_MODE) && (
+            <div style={{ textAlign: "center" }}>
+              <button onClick={onSignup} className="hl" style={{ width: "100%", background: C.coral, color: C.deepBg, border: "none", borderRadius: 8, padding: "14px 0", fontWeight: 700, fontSize: 16, marginBottom: 12 }}>
+                {!user ? (BETA_MODE ? "Create account — save your progress →" : "Sign up free — save your progress →") : "Upgrade to Basic →"}
+              </button>
+              {!BETA_MODE && <div style={{ fontSize: 13, color: C.textOnDark, opacity: 0.45 }}>Free forever · No credit card required</div>}
             </div>
-          </div>
+          )}
 
         </div>
       </div>
@@ -6798,7 +6807,7 @@ export default function App() {
             ) : (
               <>
                 <button onClick={() => setAuth("signin")} style={{ background: "transparent", border: `1px solid ${C.borderOnDark}`, color: C.textOnDark, borderRadius: 8, padding: "6px 16px", fontSize: 13, opacity: 0.8 }}>Sign in</button>
-                <button onClick={() => setShowOnboarding(true)} className="hl" style={{ background: C.coral, border: "none", color: C.deepBg, borderRadius: 8, padding: "6px 16px", fontSize: 13, fontWeight: 700 }}>Sign up free</button>
+                <button onClick={() => setShowOnboarding(true)} className="hl" style={{ background: C.coral, border: "none", color: C.deepBg, borderRadius: 8, padding: "6px 16px", fontSize: 13, fontWeight: 700 }}>{BETA_MODE ? "Create account" : "Sign up free"}</button>
               </>
             )}
           </div>
@@ -6838,7 +6847,7 @@ export default function App() {
             ) : (
               <>
                 <button onClick={() => setAuth("signin")} style={{ background: "transparent", border: `1px solid ${C.borderOnDark}`, color: C.textOnDark, borderRadius: 8, padding: "6px 16px", fontSize: 13, opacity: 0.8 }}>Sign in</button>
-                <button onClick={() => setShowOnboarding(true)} className="hl" style={{ background: C.coral, border: "none", color: C.deepBg, borderRadius: 8, padding: "6px 16px", fontSize: 13, fontWeight: 700 }}>Sign up free</button>
+                <button onClick={() => setShowOnboarding(true)} className="hl" style={{ background: C.coral, border: "none", color: C.deepBg, borderRadius: 8, padding: "6px 16px", fontSize: 13, fontWeight: 700 }}>{BETA_MODE ? "Create account" : "Sign up free"}</button>
               </>
             )}
           </div>
