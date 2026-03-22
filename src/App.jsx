@@ -2993,7 +2993,7 @@ const FigurePlaceholder = ({ figure }) => {
 };
 
 // ─── FLAG FEEDBACK ────────────────────────────────────────────────────────────
-const FlagFeedback = ({ flagData, parsed, attemptNum }) => {
+const FlagFeedback = ({ flagData, parsed, attemptNum, feedbackText }) => {
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [status, setStatus] = useState("idle"); // idle | saving | done | error
@@ -3001,22 +3001,20 @@ const FlagFeedback = ({ flagData, parsed, attemptNum }) => {
   const submit = async () => {
     if (!reason.trim()) return;
     setStatus("saving");
-    const { error } = await supabase.from("feedback_flags").insert({
+    const { data: { user } } = await supabase.auth.getUser();
+    const { error } = await supabase.from("feedback_disagreements").insert({
+      user_id: user?.id || null,
       question_id: flagData?.questionId || null,
-      question_text: flagData?.questionText || "",
+      submission_id: flagData?.submissionId || null,
       student_answer: flagData?.answer || "",
-      ai_band: parsed?.markBand || null,
-      ai_failures: parsed?.failures?.length ? parsed.failures : null,
-      ai_current_gap: parsed?.currentGap || null,
-      student_reason: reason.trim(),
-      syllabus: flagData?.syllabus || null,
-      attempt_number: attemptNum || null,
+      feedback_received: feedbackText || "",
+      disagreement_note: reason.trim(),
     });
     setStatus(error ? "error" : "done");
   };
 
   if (status === "done") {
-    return <div style={{ marginTop: 12, fontSize: 12, color: C.light }}>Thanks — we'll review this.</div>;
+    return <div style={{ marginTop: 12, fontSize: 12, color: C.light }}>Got it. We'll take a look.</div>;
   }
 
   return (
@@ -3203,7 +3201,7 @@ const FeedbackPanel = ({ feedback, attemptNum, parsed, prevBand, flagData }) => 
 
       {flagData && (
         <div style={{ padding: "0 20px 14px", background: C.bg }}>
-          <FlagFeedback flagData={flagData} parsed={parsed} attemptNum={attemptNum} />
+          <FlagFeedback flagData={flagData} parsed={parsed} attemptNum={attemptNum} feedbackText={feedback} />
         </div>
       )}
     </div>
