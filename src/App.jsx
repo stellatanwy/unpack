@@ -3850,6 +3850,11 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
       </label>
       {errors.terms && <span style={errTxt}>{errors.terms}</span>}
       {screen1Error && <div style={{ color: C.red, fontSize: 13, marginBottom: 10 }}>{screen1Error}</div>}
+      {BETA_MODE && (
+        <div style={{ fontSize: 11, color: C.light, marginTop: 14, lineHeight: 1.6, textAlign: "center" }}>
+          Beta access · Questions from school prelim papers · Your data will be kept for 2 weeks after the beta ends, then deleted.
+        </div>
+      )}
       <button onClick={handleScreen1Submit} disabled={screen1Loading} className="hl"
         style={{ width: "100%", background: C.coral, color: C.deepBg, border: "none", borderRadius: 12, padding: 14, fontWeight: 700, fontSize: 15, marginTop: 12, opacity: screen1Loading ? 0.7 : 1 }}>
         {screen1Loading ? "Creating account…" : "Create account →"}
@@ -6812,8 +6817,13 @@ export default function App() {
             )}
           </div>
         </header>
-        {/* pt-[60px] to clear fixed nav */}
-        <div style={{ paddingTop: 60 }}>
+        {/* pt-[60px] to clear fixed nav, plus beta banner if applicable */}
+        {BETA_MODE && (
+          <div style={{ position: "fixed", top: 60, left: 0, right: 0, zIndex: 99, background: C.amberL, borderBottom: `1px solid ${C.amber}40`, padding: "7px 24px", textAlign: "center", fontSize: 12, color: C.amber, fontWeight: 500 }}>
+            <strong>Beta —</strong> 2 weeks only · Questions from Singapore school prelim papers · Data deleted after beta
+          </div>
+        )}
+        <div style={{ paddingTop: BETA_MODE ? 88 : 60 }}>
           <Landing onStart={() => { setPage("app"); setTab("thisweek"); }} onSignup={() => setShowOnboarding(true)} />
         </div>
         {auth && <AuthModal initMode={auth} onClose={() => setAuth(null)} onSignup={() => { setAuth(null); setShowOnboarding(true); }} />}
@@ -6853,6 +6863,11 @@ export default function App() {
           </div>
         </header>
 
+        {BETA_MODE && (
+          <div style={{ background: C.amberL, borderBottom: `1px solid ${C.amber}40`, padding: "8px 24px", textAlign: "center", fontSize: 12, color: C.amber, fontWeight: 500, lineHeight: 1.5 }}>
+            <strong>Beta —</strong> Questions are from Singapore school prelim papers. Your data will be kept for 2 weeks after the beta ends, then deleted.
+          </div>
+        )}
 
         <div style={{ maxWidth: tab === "thisweek" ? 1100 : 860, margin: "0 auto", padding: tab === "thisweek" ? "24px 0" : "24px 14px", background: (tab === "thisweek" && showConclusion) ? C.deepBg : undefined, minHeight: (tab === "thisweek" && showConclusion) ? "calc(100vh - 56px)" : undefined }}>
           {/* Free users — whole screen, no tab bar */}

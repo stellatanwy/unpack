@@ -11,7 +11,11 @@ const CORS = {
 
 const JSON_HEADERS = { ...CORS, "Content-Type": "application/json" };
 
-// Daily call budgets per tier
+// During beta, all tiers are capped at the free limit regardless of account type.
+const BETA_MODE = true;
+const BETA_DAILY_LIMIT = 30;
+
+// Daily call budgets per tier (post-beta)
 const DAILY_LIMITS: Record<string, number> = {
   plus: 100,
   basic: 50,
@@ -78,7 +82,7 @@ serve(async (req) => {
       tier = profile?.tier ?? "free-account";
     }
 
-    const dailyLimit = DAILY_LIMITS[tier] ?? 10;
+    const dailyLimit = BETA_MODE ? BETA_DAILY_LIMIT : (DAILY_LIMITS[tier] ?? 10);
     const today = new Date().toISOString().split("T")[0];
 
     if (userId) {
