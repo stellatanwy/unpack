@@ -4679,6 +4679,7 @@ const QuestionScreen = ({ q, qIdx, total, sessionQs, sessionCompleted, onAttempt
 // ─── THIS WEEK TAB ─────────────────────────────────────────────────────────────
 const ThisWeekTab = ({ session, syllabus, onAttempt, user, onUpgrade, onSettings, onUpdateTopics, onFinish, records = [] }) => {
   const [activeIdx, setActiveIdx] = useState(0);
+  const positionedRef = useRef(false);
 
   const examDate = user?.examDate ? new Date(user.examDate) : null;
   const today = new Date();
@@ -4695,11 +4696,16 @@ const ThisWeekTab = ({ session, syllabus, onAttempt, user, onUpgrade, onSettings
   const weekStartMs = session?.weekStart ? new Date(session.weekStart).getTime() : 0;
   const attemptedIds = new Set(records.filter(r => r.timestamp >= weekStartMs).map(r => r.questionId));
 
-  // Resume at first unattempted question when session changes or on mount
+  // Resume at first unattempted question. Re-run when session changes (reset ref) or when
+  // records first arrive — so login after attempts correctly skips already-done questions.
+  useEffect(() => { positionedRef.current = false; }, [session?.weekStart]); // eslint-disable-line
   useEffect(() => {
+    if (positionedRef.current) return;
+    if (total === 0) return;
+    positionedRef.current = true;
     const firstUnattempted = sessionQs.findIndex(q => !attemptedIds.has(q.id));
     setActiveIdx(firstUnattempted === -1 ? total - 1 : firstUnattempted);
-  }, [session?.weekStart]); // eslint-disable-line
+  }, [session?.weekStart, records.length]); // eslint-disable-line
 
   const allDone = total > 0 && sessionQs.every(q => attemptedIds.has(q.id));
   if (allDone) return (
