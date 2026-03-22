@@ -6207,7 +6207,7 @@ const Landing = ({ onStart, onSignup }) => (
             </div>
           ))}
         </div>
-        <p style={{ color: C.light, fontSize: 13, marginTop: 8 }}>Social Studies · History · Literature — coming next.</p>
+
       </div>
     </section>
 
