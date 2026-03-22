@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: "Who made this?",
-    a: "Unpack was made by a Singapore Geography graduate and ex-MOE teacher who spent years tutoring upper-secondary students and watching the same reasoning gaps come up again and again. The product came out of a masters thesis on interaction design, and a lot of frustration with how exam skills are usually taught.",
+    a: "Unpack was made by a Singapore Geography graduate and ex-MOE teacher who spent years tutoring upper-secondary students and watching the same reasoning gaps come up again and again. The product came out of a lot of frustration with how exam skills are usually taught.",
   },
   {
     q: "How long before we see improvement?",
