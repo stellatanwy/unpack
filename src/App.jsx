@@ -3951,7 +3951,7 @@ const Onboarding = ({ initialData, initialStep, onComplete, onClose, tier }) => 
         <div style={{ color: C.mid, fontSize: 14 }}>We'll focus your practice on what you've learned.</div>
       </div>
 
-      {(selectedTier === "free" || (!selectedTier && (!tier || tier === "free-account"))) && (
+      {!BETA_MODE && (selectedTier === "free" || (!selectedTier && (!tier || tier === "free-account"))) && (
         <div style={{ background: "#fffbeb", border: "1.5px solid #f59e0b", borderRadius: 10, padding: "11px 14px", marginBottom: 20, fontSize: 13, color: "#92400e", lineHeight: 1.55 }}>
           You're on the Free plan — your first 3 questions are from the Climate cluster to get you started. Your topic selections will apply when you upgrade to Basic or Plus.
         </div>
