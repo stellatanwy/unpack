@@ -36,3 +36,14 @@ export const callClaudeWithImage = async (promptKey, userMsg, imageBase64, media
   });
   return handleResponse(res);
 };
+
+// Coach call — sends question context to the edge function so it can fetch
+// attempt history + student memory server-side and persist the session row.
+export const callCoach = async (questionId, userMsg, studentAnswer, diagnosisJson) => {
+  const res = await fetch(edgeFnUrl(), {
+    method: "POST",
+    headers: authHeader(),
+    body: JSON.stringify({ promptKey: "coach", userMsg, questionId, studentAnswer, diagnosisJson }),
+  });
+  return handleResponse(res);
+};

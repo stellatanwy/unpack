@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { supabase } from "./lib/supabase.js";
-import { callClaude, callClaudeWithImage } from "./lib/ai.js";
+import { callClaude, callClaudeWithImage, callCoach } from "./lib/ai.js";
 
 // ─── DEV MODE ─────────────────────────────────────────────────────────────────
 // Set to true for local testing only. NEVER commit or deploy with DEV_MODE = true.
@@ -3212,14 +3212,39 @@ const FeedbackPanel = ({ feedback, attemptNum, parsed, prevBand, flagData }) => 
 const QuestionCard = ({ q, onAttempt, canSubmit, onUpgrade, syllabus, user, bonusMode, onBack }) => {
   const [answer, setAnswer] = useState("");
   const [attempts, setAttempts] = useState([]);
-  const [phase, setPhase] = useState("idle"); // idle | checking | analysing
+  const [phase, setPhase] = useState("idle"); // idle | checking | analysing | loading
   const [blocked, setBlocked] = useState(null);
   const [open, setOpen] = useState(false);
   const latest = attempts[attempts.length - 1];
   const prevBand = attempts.length >= 2 ? attempts[attempts.length - 2].parsed?.markBand : null;
   const bandHistory = attempts.map(a => BAND_NUM[a.parsed?.markBand] || 1);
+  const movedOn = latest?.movedOn ?? false;
+  const atCap = attempts.length >= 4 || movedOn;
 
   const handleAnswerChange = (e) => { setAnswer(e.target.value); if (blocked) setBlocked(null); };
+
+  // Restore attempt history from DB on mount so sessions survive logout
+  useEffect(() => {
+    if (!user?.id || !q?.id) return;
+    setPhase("loading");
+    supabase
+      .from("question_sessions")
+      .select("attempt_number, student_answer, diagnosis, coaching_message, moved_on")
+      .eq("user_id", user.id)
+      .eq("question_id", q.id)
+      .order("attempt_number", { ascending: true })
+      .then(({ data }) => {
+        if (data?.length > 0) {
+          setAttempts(data.map(row => ({
+            answerText: row.student_answer,
+            feedback: row.coaching_message,
+            parsed: row.diagnosis ? evalToParsed(row.diagnosis, q.marks) : null,
+            movedOn: row.moved_on,
+          })));
+        }
+        setPhase("idle");
+      });
+  }, [q?.id, user?.id]); // eslint-disable-line
 
   useEffect(() => {
     if (attempts.length > 0) {
@@ -3228,7 +3253,7 @@ const QuestionCard = ({ q, onAttempt, canSubmit, onUpgrade, syllabus, user, bonu
   }, [attempts.length]);
 
   const submit = async () => {
-    if (!answer.trim() || phase !== "idle") return;
+    if (!answer.trim() || phase !== "idle" || atCap) return;
     if (!canSubmit) { onUpgrade(); return; }
     const n = attempts.length + 1;
     setPhase("checking");
@@ -3257,24 +3282,25 @@ const QuestionCard = ({ q, onAttempt, canSubmit, onUpgrade, syllabus, user, bonu
         evalResult = extractJSON(evalRaw);
       }
       if (!evalResult || (!evalResult.isComplete && !evalResult.primaryGap && !(evalResult.gaps?.length))) {
-        setAttempts(p => [...p, { feedback: "Something went wrong on our end — please resubmit your answer.", parsed: null, answerText: answer }]);
+        setAttempts(p => [...p, { feedback: "Something went wrong on our end — please resubmit your answer.", parsed: null, answerText: answer, movedOn: false }]);
         setPhase("idle");
         return;
       }
       const feedbackInput = `${userMsg}\n\nEVALUATION (fixed — do not recalculate):\n${JSON.stringify(evalResult, null, 2)}`;
-      let fb = stripAudit(await callClaude("feedback", feedbackInput));
+      let fb = stripAudit(await callCoach(q.id, feedbackInput, answer, evalResult));
       const parsed = evalToParsed(evalResult, q.marks);
       fb = sealIfComplete(fb, parsed, q.marks);
-      setAttempts(p => [...p, { feedback: fb, parsed, answerText: answer }]);
-      onAttempt({ questionId: q.id, cluster: q.cluster, skill: q.skill, marks: q.marks, syllabus, attemptNumber: n, parsed, timestamp: Date.now() });
+      const isMovedOn = evalResult.isComplete || n >= 4;
+      setAttempts(p => [...p, { feedback: fb, parsed, answerText: answer, movedOn: isMovedOn }]);
+      onAttempt({ questionId: q.id, cluster: q.cluster, skill: q.skill, marks: q.marks, syllabus, attemptNumber: n, parsed, timestamp: Date.now(), movedOn: isMovedOn });
     } catch (err) {
-      setAttempts(p => [...p, { feedback: `Connection error — ${err.message}`, parsed: null, answerText: answer }]);
+      setAttempts(p => [...p, { feedback: `Connection error — ${err.message}`, parsed: null, answerText: answer, movedOn: false }]);
     }
     setPhase("idle");
   };
 
   const btnLabel = phase === "checking" ? "Checking…" : phase === "analysing" ? "Analysing…" : attempts.length > 0 ? "Re-submit →" : "Get Feedback →";
-  const busy = phase !== "idle";
+  const busy = phase !== "idle" && phase !== "loading";
 
   return (
     <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, marginBottom: 10, overflow: "hidden", boxShadow: open ? "0 4px 20px rgba(255,107,53,0.07)" : "0 1px 3px rgba(0,0,0,0.04)", transition: "box-shadow 0.2s" }}>
@@ -3305,25 +3331,36 @@ const QuestionCard = ({ q, onAttempt, canSubmit, onUpgrade, syllabus, user, bonu
             </div>
           )}
           {q.figure && <div style={{ marginTop: 12 }}><FigurePlaceholder figure={q.figure} /></div>}
-          {attempts.length > 0 && <div style={{ background: C.greenL, border: `1px solid ${C.green}40`, borderRadius: 8, padding: "7px 12px", marginTop: 10, fontSize: 13, color: C.green, fontWeight: 600 }}>✏️ Your last answer is below — edit it based on the feedback, then resubmit.</div>}
-          <textarea value={answer} onChange={handleAnswerChange}
-            placeholder={attempts.length > 0 ? "Edit your answer above, then resubmit…" : "Write your answer here…"}
-            style={{ width: "100%", minHeight: 130, background: C.bg, border: `1.5px solid ${blocked ? C.red : C.border}`, borderRadius: 10, padding: "11px 13px", color: C.text, fontSize: 14, lineHeight: 1.6, resize: "vertical", marginTop: 10 }} />
-          {blocked && (
-            <div style={{ background: C.redL, border: `1.5px solid ${C.red}`, borderRadius: 8, padding: "8px 12px", marginTop: 6, fontSize: 13, color: C.red, fontWeight: 500 }}>
-              {blocked}
+          {attempts.length > 0 && !atCap && <div style={{ background: C.greenL, border: `1px solid ${C.green}40`, borderRadius: 8, padding: "7px 12px", marginTop: 10, fontSize: 13, color: C.green, fontWeight: 600 }}>✏️ Your last answer is below — edit it based on the feedback, then resubmit.</div>}
+          {!atCap && (
+            <>
+              <textarea value={answer} onChange={handleAnswerChange}
+                placeholder={attempts.length > 0 ? "Edit your answer above, then resubmit…" : "Write your answer here…"}
+                style={{ width: "100%", minHeight: 130, background: C.bg, border: `1.5px solid ${blocked ? C.red : C.border}`, borderRadius: 10, padding: "11px 13px", color: C.text, fontSize: 14, lineHeight: 1.6, resize: "vertical", marginTop: 10 }} />
+              {blocked && (
+                <div style={{ background: C.redL, border: `1.5px solid ${C.red}`, borderRadius: 8, padding: "8px 12px", marginTop: 6, fontSize: 13, color: C.red, fontWeight: 500 }}>
+                  {blocked}
+                </div>
+              )}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
+                <span style={{ color: C.light, fontSize: 12 }}>
+                  {answer.split(/\s+/).filter(Boolean).length} words · {q.marks} marks
+                  {attempts.length > 0 && ` · 🔥 ${attempts.length} attempt${attempts.length > 1 ? "s" : ""}`}
+                </span>
+                <button onClick={submit} disabled={!answer.trim() || busy} className="hl"
+                  style={{ background: busy ? C.border : C.coral, color: busy ? C.light : "#fff", border: "none", borderRadius: 10, padding: "9px 20px", fontWeight: 700, fontSize: 14 }}>
+                  {btnLabel}
+                </button>
+              </div>
+            </>
+          )}
+          {atCap && (
+            <div style={{ marginTop: 12, background: C.bg, border: `1px solid ${C.border}`, borderRadius: 10, padding: "12px 14px", fontSize: 13, color: C.mid }}>
+              {movedOn && latest?.parsed?.isComplete
+                ? "Full marks — question complete."
+                : "That's 4 attempts on this one. We'll come back to this question type in a future session."}
             </div>
           )}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 10 }}>
-            <span style={{ color: C.light, fontSize: 12 }}>
-              {answer.split(/\s+/).filter(Boolean).length} words · {q.marks} marks
-              {attempts.length > 0 && ` · 🔥 ${attempts.length} attempt${attempts.length > 1 ? "s" : ""}`}
-            </span>
-            <button onClick={submit} disabled={!answer.trim() || busy} className="hl"
-              style={{ background: busy ? C.border : C.coral, color: busy ? C.light : "#fff", border: "none", borderRadius: 10, padding: "9px 20px", fontWeight: 700, fontSize: 14 }}>
-              {btnLabel}
-            </button>
-          </div>
           <FeedbackPanel feedback={latest?.feedback} attemptNum={attempts.length} parsed={latest?.parsed} prevBand={prevBand}
             flagData={latest ? { questionId: q.id, questionText: q.question, answer: latest.answerText, syllabus } : null} />
         </div>

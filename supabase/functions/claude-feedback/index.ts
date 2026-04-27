@@ -34,7 +34,8 @@ serve(async (req) => {
   }
 
   try {
-    const { promptKey, userMsg, image } = await req.json();
+    const body = await req.json();
+    const { promptKey, userMsg, image, questionId, studentAnswer, diagnosisJson } = body;
 
     if (!promptKey || !userMsg) {
       return new Response(
@@ -71,22 +72,22 @@ serve(async (req) => {
 
     let userId = user?.id ?? null;
     let tier = "anon";
+    let profileMemory: Record<string, any> = { recurring_weaknesses: [], current_focus: "", topics_practised: [], command_words: [] };
 
     if (userId) {
-      // Fetch tier from profiles table
       const { data: profile } = await supabase
         .from("profiles")
-        .select("tier")
+        .select("tier, memory")
         .eq("id", userId)
         .single();
       tier = profile?.tier ?? "free-account";
+      if (profile?.memory) profileMemory = profile.memory;
     }
 
     const dailyLimit = BETA_MODE ? BETA_DAILY_LIMIT : (DAILY_LIMITS[tier] ?? 10);
     const today = new Date().toISOString().split("T")[0];
 
     if (userId) {
-      // Atomically increment counter and check limit
       const { data: usage, error: usageErr } = await supabase.rpc("increment_usage", {
         p_user_id: userId,
         p_date: today,
@@ -94,7 +95,6 @@ serve(async (req) => {
 
       if (usageErr) {
         console.error("Usage tracking error:", usageErr.message);
-        // Don't block the request if usage tracking fails — log and continue
       } else if (usage > dailyLimit) {
         return new Response(
           JSON.stringify({ error: "Daily limit reached", limit: dailyLimit, tier }),
@@ -102,16 +102,42 @@ serve(async (req) => {
         );
       }
     }
-    // Unauthenticated users are not tracked (no user_id) but still allowed up to anon limit
-    // — IP-based limiting would require a proxy layer outside Supabase
+
+    // ── Coach: enrich userMsg with memory + attempt history ────────────────
+    let enrichedUserMsg = userMsg;
+    let attemptNumber = 1;
+
+    if (promptKey === "coach" && userId && questionId) {
+      const { data: history } = await supabase
+        .from("question_sessions")
+        .select("attempt_number, student_answer, revision_target, target_addressed, moved_on")
+        .eq("user_id", userId)
+        .eq("question_id", questionId)
+        .order("attempt_number", { ascending: true });
+
+      attemptNumber = (history?.length ?? 0) + 1;
+
+      const memoryBlock = `STUDENT MEMORY
+recurring_weaknesses: ${profileMemory.recurring_weaknesses?.join(", ") || "none yet"}
+current_focus: ${profileMemory.current_focus || "none yet"}
+topics_practised: ${profileMemory.topics_practised?.join(", ") || "none yet"}
+command_words: ${profileMemory.command_words?.join(", ") || "none yet"}`;
+
+      const historyLines = (history ?? []).map((row: any) =>
+        `  Attempt ${row.attempt_number}: ${row.student_answer?.slice(0, 120)}…\n    Revision target: ${row.revision_target ?? "—"}\n    Addressed: ${row.target_addressed === true ? "yes" : row.target_addressed === false ? "no" : "—"}`
+      ).join("\n");
+      const historyBlock = `ATTEMPT HISTORY\n${historyLines || "  (none — this is the first attempt)"}`;
+
+      enrichedUserMsg = `${memoryBlock}\n\n${historyBlock}\n\nCURRENT ATTEMPT: ${attemptNumber} of 4\n\n${userMsg}`;
+    }
 
     // ── Anthropic API call ──────────────────────────────────────────────────
     const messageContent = image
       ? [
           { type: "image", source: { type: "base64", media_type: image.mediaType, data: image.base64 } },
-          { type: "text", text: userMsg },
+          { type: "text", text: enrichedUserMsg },
         ]
-      : userMsg;
+      : enrichedUserMsg;
 
     const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -137,6 +163,54 @@ serve(async (req) => {
     }
 
     const data = await anthropicRes.json();
+    const rawText: string = data.content?.[0]?.text ?? "";
+
+    // ── Coach: parse METADATA, persist to DB, strip from response ──────────
+    if (promptKey === "coach" && userId && questionId) {
+      const metaSep = rawText.indexOf("---METADATA---");
+      const feedbackText = metaSep !== -1 ? rawText.slice(0, metaSep).trim() : rawText;
+      let metadata: Record<string, any> = {};
+      if (metaSep !== -1) {
+        try { metadata = JSON.parse(rawText.slice(metaSep + 14).trim()); } catch { /* ignore malformed */ }
+      }
+
+      // Persist question_session row
+      await supabase.from("question_sessions").upsert({
+        user_id: userId,
+        question_id: questionId,
+        attempt_number: attemptNumber,
+        student_answer: studentAnswer ?? "",
+        diagnosis: diagnosisJson ?? null,
+        revision_target: metadata.revision_target ?? null,
+        target_addressed: metadata.target_addressed ?? null,
+        coaching_message: feedbackText,
+        moved_on: metadata.moved_on ?? false,
+      }, { onConflict: "user_id,question_id,attempt_number" });
+
+      // Update student profile memory
+      if (metadata.memory_update && Object.keys(metadata.memory_update).length > 0) {
+        const mu = metadata.memory_update;
+        const updated = { ...profileMemory };
+
+        if (mu.add_weakness && !updated.recurring_weaknesses?.includes(mu.add_weakness)) {
+          updated.recurring_weaknesses = [...(updated.recurring_weaknesses ?? []), mu.add_weakness];
+        }
+        if (mu.add_topic && !updated.topics_practised?.includes(mu.add_topic)) {
+          updated.topics_practised = [...(updated.topics_practised ?? []), mu.add_topic];
+        }
+        if (mu.add_command_word && !updated.command_words?.includes(mu.add_command_word)) {
+          updated.command_words = [...(updated.command_words ?? []), mu.add_command_word];
+        }
+        if (mu.set_focus) updated.current_focus = mu.set_focus;
+
+        await supabase.from("profiles").update({ memory: updated }).eq("id", userId);
+      }
+
+      // Return only the feedback text, not the METADATA block
+      const strippedData = { ...data, content: [{ ...data.content[0], text: feedbackText }] };
+      return new Response(JSON.stringify(strippedData), { headers: JSON_HEADERS });
+    }
+
     return new Response(JSON.stringify(data), { headers: JSON_HEADERS });
 
   } catch (err) {
