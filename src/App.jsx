@@ -6152,163 +6152,206 @@ const StudentIllustration = () => (
 const Landing = ({ onStart, onSignup }) => (
   <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
 
-    {/* ── HERO (dark green) ─────────────────────────────────────── */}
+    {/* ── HERO ─────────────────────────────────────────────────────
+        Dark green. Two pillars introduced: diagnostic tool + tutor session.
+    ──────────────────────────────────────────────────────────────── */}
     <section style={{ background: C.deepBg, minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: "80px 24px", position: "relative", overflow: "hidden" }}>
-      {/* background grid lines */}
       <div style={{ position: "absolute", inset: 0, backgroundImage: "linear-gradient(rgba(245,240,232,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(245,240,232,0.04) 1px, transparent 1px)", backgroundSize: "40px 40px", pointerEvents: "none" }} />
-      <div style={{ maxWidth: 860, margin: "0 auto", width: "100%", display: "grid", gridTemplateColumns: "1fr auto", gap: 40, alignItems: "center" }}>
-        <div>
-          <div style={{ display: "inline-flex", border: `1px solid ${C.borderOnDark}`, color: C.textOnDark, borderRadius: 4, padding: "4px 12px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", marginBottom: 28, opacity: 0.6 }}>
-            SINGAPORE O-LEVEL &amp; N-LEVEL GEOGRAPHY
-          </div>
-          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(36px,6vw,62px)", fontWeight: 700, color: C.textOnDark, lineHeight: 1.1, marginBottom: 24 }}>
-            Understand why<br />you lost the mark.
-          </h1>
-          <p style={{ color: C.textOnDark, opacity: 0.72, fontSize: "clamp(15px,2vw,17px)", maxWidth: 480, lineHeight: 1.7, marginBottom: 36 }}>
-            Unpack diagnoses the exact reasoning gap in your Geography answer — and trains you to fix it.
-          </p>
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-            <button onClick={onStart} className="hl" style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 8, padding: "13px 28px", fontWeight: 700, fontSize: 15 }}>
-              Start free →
-            </button>
-            <button onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })} style={{ background: "transparent", color: C.textOnDark, border: `1.5px solid ${C.borderOnDark}`, borderRadius: 8, padding: "12px 24px", fontWeight: 600, fontSize: 15, opacity: 0.8 }}>
-              See how it works
-            </button>
-          </div>
+      <div style={{ maxWidth: 720, margin: "0 auto", width: "100%", position: "relative" }}>
+        <div style={{ display: "inline-flex", border: `1px solid ${C.borderOnDark}`, color: C.textOnDark, borderRadius: 4, padding: "4px 12px", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", marginBottom: 28, opacity: 0.55 }}>
+          SINGAPORE O-LEVEL &amp; N-LEVEL GEOGRAPHY
         </div>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: 120 }}>
-          <StudentIllustration />
+        <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(38px,6vw,66px)", fontWeight: 700, color: C.textOnDark, lineHeight: 1.08, marginBottom: 24 }}>
+          Understand why<br />you lost the mark.
+        </h1>
+        <p style={{ color: C.textOnDark, opacity: 0.7, fontSize: "clamp(15px,2vw,18px)", maxWidth: 520, lineHeight: 1.75, marginBottom: 16 }}>
+          Attempt a Geography exam question. Get a diagnosis of exactly where your reasoning broke down. Revise and resubmit — up to four times.
+        </p>
+        <p style={{ color: C.textOnDark, opacity: 0.5, fontSize: 14, maxWidth: 520, lineHeight: 1.7, marginBottom: 40 }}>
+          If you're still stuck after four attempts, book an hour with Stella — the tutor who built this. She'll see your gap history before you start.
+        </p>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+          <button onClick={onStart} className="hl" style={{ background: C.coral, color: C.deepBg, border: "none", borderRadius: 8, padding: "14px 30px", fontWeight: 800, fontSize: 15, letterSpacing: "-0.01em" }}>
+            Try a question →
+          </button>
+          <button onClick={() => document.getElementById("book-session")?.scrollIntoView({ behavior: "smooth" })} className="hl" style={{ background: "transparent", color: C.textOnDark, border: `1.5px solid ${C.borderOnDark}`, borderRadius: 8, padding: "13px 24px", fontWeight: 600, fontSize: 15, opacity: 0.8 }}>
+            Book a session with Stella
+          </button>
         </div>
       </div>
     </section>
 
-    {/* ── HOW IT WORKS (cream) ──────────────────────────────────── */}
-    <section id="how-it-works" style={{ background: C.bg, padding: "80px 24px" }}>
-      <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, color: C.text, marginBottom: 12 }}>How it works</h2>
-        <p style={{ color: C.light, fontSize: 15, marginBottom: 56, lineHeight: 1.6 }}>Three steps. No grades — just diagnosis.</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 0, position: "relative" }}>
-          {/* connecting line */}
-          <div style={{ position: "absolute", top: 28, left: "16.66%", right: "16.66%", height: 1, background: C.border, zIndex: 0 }} />
+    {/* ── HOW IT WORKS ─────────────────────────────────────────────
+        Cream. Four steps: attempt → diagnose → revise → (if stuck) book.
+    ──────────────────────────────────────────────────────────────── */}
+    <section id="how-it-works" style={{ background: C.bg, padding: "88px 24px" }}>
+      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px,4vw,40px)", fontWeight: 700, color: C.text, marginBottom: 12 }}>How it works</h2>
+        <p style={{ color: C.light, fontSize: 15, marginBottom: 60, lineHeight: 1.6 }}>One gap at a time. No grades — just diagnosis.</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
           {[
-            { icon: "✍", title: "Attempt a question", desc: "Write your Geography exam answer. Any question type — Explain, Describe, Evaluate, Compare." },
-            { icon: "◎", title: "Get diagnosed", desc: "Unpack finds the exact reasoning gap holding your marks back. One gap at a time, in plain language." },
-            { icon: "↑", title: "Fix your thinking", desc: "Revise your answer. Resubmit. Track how your reasoning improves across the session." },
+            {
+              num: "01",
+              title: "Attempt a question",
+              desc: "Write your Geography exam answer — Explain, Describe, Evaluate, Compare. Any question type from the curated bank.",
+            },
+            {
+              num: "02",
+              title: "Get diagnosed",
+              desc: "One reasoning gap surfaces. Not a list of everything wrong — the single most important thing holding your marks back, in plain language.",
+            },
+            {
+              num: "03",
+              title: "Revise and resubmit",
+              desc: "Fix what was flagged. Resubmit. The coach checks whether you addressed it before surfacing the next gap. Up to four attempts.",
+            },
+            {
+              num: "04",
+              title: "Still stuck? Book a session",
+              desc: "After four attempts, if the gap hasn't closed, you'll see an option to book an hour with Stella. She'll review your attempt history before the session starts.",
+              highlight: true,
+            },
           ].map((s, i) => (
-            <div key={i} style={{ padding: "0 24px", textAlign: "center", position: "relative", zIndex: 1 }}>
-              <div style={{ width: 56, height: 56, border: `2px solid ${C.border}`, borderRadius: "50%", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 24px", fontSize: 22, color: C.mid }}>
-                {s.icon}
+            <div key={i} style={{ display: "flex", gap: 24, padding: "28px 0", borderBottom: i < 3 ? `1px solid ${C.border}` : "none" }}>
+              <div style={{ fontFamily: "'Fraunces', serif", fontSize: 13, fontWeight: 700, color: s.highlight ? C.coral : C.border, minWidth: 28, paddingTop: 2, letterSpacing: "0.04em" }}>
+                {s.num}
               </div>
-              <div style={{ fontWeight: 700, fontSize: 15, color: C.text, marginBottom: 8 }}>{s.title}</div>
-              <div style={{ color: C.light, fontSize: 13, lineHeight: 1.65 }}>{s.desc}</div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 16, color: C.text, marginBottom: 6 }}>{s.title}</div>
+                <div style={{ color: C.light, fontSize: 14, lineHeight: 1.7 }}>{s.desc}</div>
+              </div>
             </div>
           ))}
         </div>
       </div>
     </section>
 
-    {/* ── WHAT UNPACK FINDS (dark green) ───────────────────────── */}
-    <section style={{ background: C.green, padding: "80px 24px" }}>
-      <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, color: C.textOnDark, marginBottom: 12 }}>What Unpack finds</h2>
-        <p style={{ color: C.textOnDark, opacity: 0.65, fontSize: 15, marginBottom: 44, lineHeight: 1.6 }}>The reasoning gaps that mark schemes penalise — but teachers rarely have time to explain.</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 10 }}>
-          {[
-            { icon: "⛓", label: "Incomplete chain", desc: "Your cause stops before reaching the effect." },
-            { icon: "⇄", label: "Missing comparison", desc: "You described one side without comparing the other." },
-            { icon: "↗", label: "Question drift", desc: "Your answer is correct — but answers a different question." },
-            { icon: "⟳", label: "Point recycling", desc: "The same idea rephrased — not a new point." },
-            { icon: "◌", label: "Generic evidence", desc: "A real example would earn the mark. A vague one won't." },
-          ].map(g => (
-            <div key={g.label} style={{ background: C.deepBg, border: `1px solid ${C.borderOnDark}`, borderRadius: 12, padding: "18px 16px", display: "flex", flexDirection: "column", gap: 6 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <span style={{ fontSize: 18, opacity: 0.7 }}>{g.icon}</span>
-                <span style={{ fontWeight: 700, fontSize: 14, color: C.textOnDark }}>{g.label}</span>
-              </div>
-              <p style={{ color: C.textOnDark, opacity: 0.6, fontSize: 13, lineHeight: 1.55, margin: 0 }}>{g.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    {/* ── THE HANDOFF MOMENT ───────────────────────────────────────
+        Dark green. The bridge between pillar 1 and pillar 2.
+    ──────────────────────────────────────────────────────────────── */}
+    <section style={{ background: C.deepBg, padding: "88px 24px" }}>
+      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px,4vw,40px)", fontWeight: 700, color: C.textOnDark, marginBottom: 16, lineHeight: 1.2 }}>
+          Still stuck after<br />four attempts?
+        </h2>
+        <p style={{ color: C.textOnDark, opacity: 0.65, fontSize: 16, lineHeight: 1.75, maxWidth: 520, marginBottom: 48 }}>
+          Some gaps take more than a screen to close. When the diagnostic has done what it can, there's a direct line to a real session.
+        </p>
 
-    {/* ── SYLLABUS (cream) ──────────────────────────────────────── */}
-    <section style={{ background: C.bg, padding: "80px 24px" }}>
-      <div style={{ maxWidth: 860, margin: "0 auto" }}>
-        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, color: C.text, marginBottom: 12 }}>Built for Singapore Geography</h2>
-        <p style={{ color: C.light, fontSize: 15, marginBottom: 36, lineHeight: 1.6 }}>Calibrated to MOE marking criteria.</p>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 20 }}>
-          {["O-Level Elective", "O-Level Pure", "N(A)-Level Elective", "N(A)-Level Pure"].map(s => (
-            <div key={s} style={{ border: `1.5px solid ${C.border}`, borderRadius: 8, padding: "9px 16px", fontSize: 13, fontWeight: 600, color: C.text, background: C.card }}>
-              {s}
-            </div>
-          ))}
-        </div>
-
-      </div>
-    </section>
-
-    {/* ── PRICING (dark green) ──────────────────────────────────── */}
-    {!BETA_MODE && (
-      <section style={{ background: C.deepBg, padding: "80px 24px" }}>
-        <div style={{ maxWidth: 860, margin: "0 auto" }}>
-          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px,4vw,38px)", fontWeight: 700, color: C.textOnDark, marginBottom: 8 }}>Pricing</h2>
-          <p style={{ color: C.textOnDark, opacity: 0.6, fontSize: 15, marginBottom: 44 }}>Start free. No credit card, no expiry.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 12 }}>
-            {[
-              {
-                name: "Free", price: "$0", period: "forever",
-                highlight: false,
-                features: ["3 questions, always free", "Full diagnostic feedback", "Unlimited re-submissions"]
-              },
-              {
-                name: "Basic", price: "$12.90", period: "/month",
-                highlight: false,
-                tag: "Most popular",
-                features: ["Everything in Free", "Weekly curated sessions", "Bonus additional practice", "Progress dashboard", "More sessions near exam"]
-              },
-              {
-                name: "Plus", price: "$15.90", period: "/month",
-                highlight: true,
-                tag: "For serious prep",
-                features: ["Everything in Basic", "Custom question diagnostics", "Full paper simulation (coming soon!)"]
-              },
-            ].map(p => (
-              <div key={p.name} style={{ background: C.green, border: `2px solid ${p.highlight ? C.coral : C.borderOnDark}`, borderRadius: 12, padding: "26px 22px", position: "relative" }}>
-                {p.tag && (
-                  <div style={{ position: "absolute", top: -11, left: 18, background: p.highlight ? C.coral : C.borderOnDark, color: p.highlight ? C.deepBg : C.textOnDark, borderRadius: 4, padding: "2px 10px", fontSize: 11, fontWeight: 700 }}>{p.tag}</div>
-                )}
-                <div style={{ fontWeight: 700, fontSize: 13, color: C.textOnDark, opacity: 0.6, marginBottom: 6, letterSpacing: "0.06em" }}>{p.name.toUpperCase()}</div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 20 }}>
-                  <span style={{ fontFamily: "'Fraunces', serif", fontSize: 36, fontWeight: 700, color: C.textOnDark }}>{p.price}</span>
-                  <span style={{ color: C.textOnDark, opacity: 0.5, fontSize: 13 }}>{p.period}</span>
-                </div>
-                <div style={{ borderTop: `1px solid ${C.borderOnDark}`, marginBottom: 16 }} />
-                {p.features.map(f => (
-                  <div key={f} style={{ display: "flex", gap: 8, marginBottom: 8, alignItems: "flex-start" }}>
-                    <span style={{ color: C.green, flexShrink: 0, fontWeight: 700 }}>✓</span>
-                    <span style={{ color: C.textOnDark, opacity: 0.75, fontSize: 13 }}>{f}</span>
-                  </div>
-                ))}
-                <button onClick={p.name === "Free" ? onStart : onSignup} className="hl" style={{ width: "100%", marginTop: 20, background: p.highlight ? C.coral : "transparent", color: p.highlight ? C.deepBg : C.textOnDark, border: `1.5px solid ${p.highlight ? C.coral : C.borderOnDark}`, borderRadius: 8, padding: "11px 0", fontWeight: 700, fontSize: 13 }}>
-                  {p.name === "Free" ? "Start free →" : "Start training →"}
-                </button>
-              </div>
-            ))}
+        {/* Diagnostic result mock — shows what the student sees before the handoff prompt */}
+        <div style={{ background: C.green, border: `1px solid ${C.borderOnDark}`, borderRadius: 14, padding: "20px 22px", marginBottom: 16, maxWidth: 480 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.textOnDark, opacity: 0.4, letterSpacing: "0.1em", marginBottom: 10 }}>ATTEMPT 4 OF 4</div>
+          <div style={{ fontWeight: 700, fontSize: 14, color: C.textOnDark, marginBottom: 6 }}>What's holding you back</div>
+          <p style={{ color: C.textOnDark, opacity: 0.65, fontSize: 13, lineHeight: 1.65, margin: 0 }}>
+            You've identified the correct strategy, but your answer stops before explaining the outcome. The mechanism is there — the link to impact is missing.
+          </p>
+          <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px solid ${C.borderOnDark}` }}>
+            <div style={{ fontSize: 11, color: C.textOnDark, opacity: 0.4, fontWeight: 600, marginBottom: 6, letterSpacing: "0.06em" }}>PROGRESS</div>
+            <div style={{ fontSize: 13, color: C.coral, fontWeight: 600 }}>DONE: Strategy named · Cause identified</div>
+            <div style={{ fontSize: 13, color: C.textOnDark, opacity: 0.6, marginTop: 3 }}>NOW: Link cause to outcome</div>
           </div>
         </div>
-      </section>
-    )}
 
-    {/* ── FOOTER (deep green) ───────────────────────────────────── */}
+        {/* The handoff prompt */}
+        <div style={{ background: C.coral, borderRadius: 14, padding: "20px 22px", maxWidth: 480, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: 15, color: C.deepBg, marginBottom: 4 }}>Still stuck? Book a session with Stella.</div>
+            <div style={{ fontSize: 13, color: C.deepBg, opacity: 0.7, lineHeight: 1.5 }}>She'll see your gap history before you start.</div>
+          </div>
+          <button onClick={() => document.getElementById("book-session")?.scrollIntoView({ behavior: "smooth" })} className="hl" style={{ background: C.deepBg, color: C.textOnDark, border: "none", borderRadius: 8, padding: "10px 20px", fontWeight: 700, fontSize: 13, flexShrink: 0, cursor: "pointer" }}>
+            Book →
+          </button>
+        </div>
+      </div>
+    </section>
+
+    {/* ── BOOK A SESSION ───────────────────────────────────────────
+        Cream. Stella's profile, pricing, Calendly embed placeholder.
+    ──────────────────────────────────────────────────────────────── */}
+    <section id="book-session" style={{ background: C.bg, padding: "88px 24px" }}>
+      <div style={{ maxWidth: 720, margin: "0 auto" }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(26px,4vw,40px)", fontWeight: 700, color: C.text, marginBottom: 12 }}>Book a session</h2>
+        <p style={{ color: C.light, fontSize: 15, lineHeight: 1.7, marginBottom: 56, maxWidth: 520 }}>
+          One hour with Stella. No commitment, no package required. Book as early as 12–24 hours in advance.
+        </p>
+
+        {/* Stella's profile */}
+        <div style={{ display: "flex", gap: 24, alignItems: "flex-start", marginBottom: 48, flexWrap: "wrap" }}>
+          {/* Photo placeholder */}
+          <div style={{ width: 80, height: 80, borderRadius: "50%", background: C.card, border: `2px solid ${C.border}`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, color: C.light }}>
+            ◎
+          </div>
+          <div style={{ flex: 1, minWidth: 220 }}>
+            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 4 }}>Stella</div>
+            <div style={{ fontSize: 13, color: C.mid, lineHeight: 1.65, maxWidth: 440 }}>
+              Singapore Geography graduate and ex-MOE teacher. Spent years tutoring upper-secondary students and watching the same reasoning gaps appear again and again. Built Unpack out of frustration with how exam skills are usually taught.
+            </div>
+          </div>
+        </div>
+
+        {/* Pricing */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12, marginBottom: 48 }}>
+          {[
+            {
+              label: "Single session",
+              price: "$100",
+              detail: "1 hour · pay as you go",
+              highlight: false,
+            },
+            {
+              label: "Bundle of 5",
+              price: "$85",
+              detail: "per session · $425 total",
+              highlight: true,
+              tag: "Better value",
+            },
+          ].map(p => (
+            <div key={p.label} style={{ background: p.highlight ? C.deepBg : C.card, border: `2px solid ${p.highlight ? C.coral : C.border}`, borderRadius: 12, padding: "24px 22px", position: "relative" }}>
+              {p.tag && (
+                <div style={{ position: "absolute", top: -11, left: 18, background: C.coral, color: C.deepBg, borderRadius: 4, padding: "2px 10px", fontSize: 11, fontWeight: 700 }}>{p.tag}</div>
+              )}
+              <div style={{ fontSize: 12, fontWeight: 700, color: p.highlight ? C.textOnDark : C.mid, opacity: p.highlight ? 0.55 : 1, letterSpacing: "0.06em", marginBottom: 8 }}>{p.label.toUpperCase()}</div>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 6 }}>
+                <span style={{ fontFamily: "'Fraunces', serif", fontSize: 38, fontWeight: 700, color: p.highlight ? C.textOnDark : C.text, lineHeight: 1 }}>{p.price}</span>
+                <span style={{ fontSize: 13, color: p.highlight ? C.textOnDark : C.light, opacity: 0.6 }}>/session</span>
+              </div>
+              <div style={{ fontSize: 13, color: p.highlight ? C.textOnDark : C.light, opacity: p.highlight ? 0.55 : 1 }}>{p.detail}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Calendly embed placeholder — wire the real embed once Calendly link is set up */}
+        <div id="calendly-placeholder" style={{ background: C.card, border: `1.5px dashed ${C.border}`, borderRadius: 12, padding: "48px 24px", textAlign: "center" }}>
+          <div style={{ fontSize: 13, color: C.light, marginBottom: 8 }}>Booking calendar coming soon</div>
+          <div style={{ fontSize: 12, color: C.border }}>— Calendly embed will go here —</div>
+        </div>
+
+      </div>
+    </section>
+
+    {/* ── SYLLABUS STRIP ───────────────────────────────────────────
+        Dark green. Compact credential line.
+    ──────────────────────────────────────────────────────────────── */}
+    <section style={{ background: C.deepBg, padding: "40px 24px" }}>
+      <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
+        <span style={{ color: C.textOnDark, opacity: 0.4, fontSize: 12, fontWeight: 600, letterSpacing: "0.06em", marginRight: 4 }}>COVERS</span>
+        {["O-Level Elective", "O-Level Pure", "N(A)-Level Elective", "N(A)-Level Pure"].map(s => (
+          <div key={s} style={{ border: `1px solid ${C.borderOnDark}`, borderRadius: 6, padding: "5px 14px", fontSize: 12, fontWeight: 600, color: C.textOnDark, opacity: 0.6 }}>
+            {s}
+          </div>
+        ))}
+      </div>
+    </section>
+
+    {/* ── FOOTER ───────────────────────────────────────────────────── */}
     <footer style={{ background: C.deepBg, borderTop: `1px solid ${C.borderOnDark}`, padding: "28px 24px" }}>
-      <div style={{ maxWidth: 860, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+      <div style={{ maxWidth: 720, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
         <span style={{ fontFamily: "'Fraunces', serif", fontWeight: 700, fontSize: 17, color: C.textOnDark }}>Unpack</span>
-        <span style={{ color: C.textOnDark, opacity: 0.45, fontSize: 12 }}>Built for Singapore students</span>
+        <span style={{ color: C.textOnDark, opacity: 0.35, fontSize: 12 }}>Built for Singapore students</span>
         <div style={{ display: "flex", gap: 20 }}>
-          <a href="/faq" target="_blank" rel="noopener noreferrer" style={{ color: C.textOnDark, opacity: 0.45, fontSize: 12, textDecoration: "none" }}>FAQ</a>
-          <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: C.textOnDark, opacity: 0.45, fontSize: 12, textDecoration: "none" }}>Privacy Policy</a>
-          <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: C.textOnDark, opacity: 0.45, fontSize: 12, textDecoration: "none" }}>Terms of Use</a>
+          <a href="/faq" target="_blank" rel="noopener noreferrer" style={{ color: C.textOnDark, opacity: 0.4, fontSize: 12, textDecoration: "none" }}>FAQ</a>
+          <a href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: C.textOnDark, opacity: 0.4, fontSize: 12, textDecoration: "none" }}>Privacy Policy</a>
+          <a href="/terms" target="_blank" rel="noopener noreferrer" style={{ color: C.textOnDark, opacity: 0.4, fontSize: 12, textDecoration: "none" }}>Terms of Use</a>
         </div>
       </div>
     </footer>
